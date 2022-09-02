@@ -5,10 +5,7 @@ from colorama import init
 from colorama import Fore, Back, Style
 init(autoreset=True)
 
-#customize maze
-#height and width set in empty cells
-mazeHeight = 10
-mazeWidth = 30
+
 
 class cell:
     def __init__(self, r, c):
@@ -91,6 +88,11 @@ def newMaze(width: int, height: int):
     currCell = mazeArr[1][1]
     currCell.visited = True
     currCell.wall = False
+
+    #place entry and exit holes
+    mazeArr[0][1].wall = False
+    mazeArr[-1][-2].wall = False
+
     #main loop
     while len(cellStack) > 0:
         if hasNeighbor(currCell, mazeArr):
@@ -122,6 +124,8 @@ def newMaze(width: int, height: int):
 
 
 #DEBUG
+mazeHeight = 10
+mazeWidth = 30
 def DEBUG():
     testarr = newMaze(mazeWidth, mazeHeight)
     rows = ((mazeWidth * 2) + 1)
@@ -133,5 +137,3 @@ def DEBUG():
                 print(Back.RED + '.', end='')
             else:
                 print(Back.GREEN + '.', end='')
-
-DEBUG()
