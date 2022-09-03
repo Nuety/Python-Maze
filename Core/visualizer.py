@@ -14,8 +14,6 @@ xCells = 10
 cellwidth = win_width / ((xCells * 2) + 1)
 cellheight = win_height / ((yCells * 2) + 1)
 
-
-
 pygame.init()
 win = pygame.display.set_mode((win_width, win_height))
 pygame.display.set_caption('MazeyMan')
@@ -32,17 +30,10 @@ while run:
     for i in range(int(((xCells * 2) + 1))):
         for j in range(int(((yCells * 2) + 1))):
             if maze[j][i] == True:
-                for c in range(int(cellwidth)):
-                    for c2 in range(int(cellheight)):
-                        pygame.draw.line(win, (127, 127, 127), (i * cellwidth, j * cellheight), (i * cellwidth + c, j * cellheight + c2))
-
+                pygame.draw.rect(win, (127, 127, 127), pygame.Rect(i * cellwidth, j * cellheight, cellwidth + 1, cellheight + 1))
 
     pygame.display.update()
                     
-
-
-    
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
