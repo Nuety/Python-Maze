@@ -25,19 +25,20 @@ def cbvisualiser(x, y):
                 sys.exit(0)
     return
 
-maze = generator.newMaze(int(xCells), int(yCells), cbvisualiser)
+def visMaze():
+    maze = generator.newMaze(int(xCells), int(yCells), cbvisualiser)
 
-run = True
+    run = True
 
-for i in range(int(((xCells * 2) + 1))):
-    for j in range(int(((yCells * 2) + 1))):
-        if maze[j][i] == True:
-            pygame.draw.rect(win, (70, 50, 30), pygame.Rect(i * cellwidth, j * cellheight, cellwidth + 1, cellheight + 1))
+    for i in range(int(((xCells * 2) + 1))):
+        for j in range(int(((yCells * 2) + 1))):
+            if maze[j][i] == True:
+                pygame.draw.rect(win, (70, 50, 30), pygame.Rect(i * cellwidth, j * cellheight, cellwidth + 1, cellheight + 1))
 
-while run:
-    pygame.display.update()
-                    
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit(0)
+    while run:
+        pygame.display.update()
+                        
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: 
+                    sys.exit(0)
