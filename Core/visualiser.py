@@ -1,6 +1,5 @@
 import generator
 import pygame
-import numpy
 import sys
 import math
 
@@ -9,8 +8,8 @@ win_width = 1920
 win_height = 1080
 
 #size of cells
-yCells = 10
-xCells = 10
+yCells = 350
+xCells = 550
 cellwidth = win_width / ((xCells * 2) + 1)
 cellheight = win_height / ((yCells * 2) + 1)
 
