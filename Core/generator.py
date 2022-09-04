@@ -133,21 +133,3 @@ def newMaze(width: int, height: int, cb):
 
         
     return mazeArr
-
-
-
-
-#DEBUG
-mazeHeight = 10
-mazeWidth = 30
-def DEBUG():
-    testarr = newMaze(mazeWidth, mazeHeight)
-    rows = ((mazeWidth * 2) + 1)
-    cols = ((mazeHeight * 2) + 1)
-    for i in range(cols):
-        print('')
-        for j in range(rows):
-            if testarr[i][j]:
-                print(Back.RED + '.', end='')
-            else:
-                print(Back.GREEN + '.', end='')

@@ -102,13 +102,12 @@ def solveMaze(maze, cbDraw):
                 duoList = i
         currIndex = duoList[0]
         currCell = maze1D[currIndex]
-        print(duoList)
 
         rTemp = int((currCell.row + prevCell.row) / 2)
         cTemp = int((currCell.col + prevCell.col) / 2)
         visualiser.draw(cTemp, rTemp, (0, 255, 0))
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
-        
+
         prevCell = currCell
         
         if currCell.row == 1 and currCell.col == 1:
