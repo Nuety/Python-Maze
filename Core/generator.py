@@ -95,11 +95,11 @@ def newMaze(width: int, height: int, cb):
     currCell.wall = False
 
     #color first cell
-    cb(currCell.col, currCell.row, cellColor)
+    #cb(currCell.col, currCell.row, cellColor)
 
     #place entry and exit holes
-    cb(1, 0, cellColor)
-    cb(rows-2, cols-1, cellColor)
+    #cb(1, 0, cellColor)
+    #cb(rows-2, cols-1, cellColor)
 
     #main loop
     while len(cellStack) > 0:

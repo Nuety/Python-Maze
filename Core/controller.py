@@ -10,10 +10,10 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 100
+xCells = 30
 
 #vertical cells
-yCells = 100
+yCells = 30
 
 #solve?
 solve = True
