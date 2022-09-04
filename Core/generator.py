@@ -72,10 +72,11 @@ def newMaze(width: int, height: int, cb):
     #stack to backtrack
     cellStack = []
 
+    cellColor = (150, 102, 51)
 
     #init array
-    rows = ((width * 2) + 1)
-    cols = ((height * 2) + 1)
+    rows = int((width * 2) + 1)
+    cols = int((height * 2) + 1)
     mazeArr = [[cell for i in range(rows)] for j in range(cols)]
 
     #init maze cells
@@ -90,11 +91,11 @@ def newMaze(width: int, height: int, cb):
     currCell.wall = False
 
     #color first cell
-    cb(currCell.col, currCell.row)
+    cb(currCell.col, currCell.row, cellColor)
 
     #place entry and exit holes
-    mazeArr[0][1].wall = False
-    mazeArr[-1][-2].wall = False
+    cb(1, 0, cellColor)
+    cb(rows-2, cols-1, cellColor)
 
     #main loop
     while len(cellStack) > 0:
@@ -109,13 +110,13 @@ def newMaze(width: int, height: int, cb):
             
             mazeArr[rTemp][cTemp].wall = False
             
-            cb(currCell.col, currCell.row)
-            cb(cTemp, rTemp)
+            cb(currCell.col, currCell.row, cellColor)
+            cb(cTemp, rTemp, cellColor)
 
             cellStack.append(neighbor)
             currCell = neighbor
 
-            cb(currCell.col, currCell.row)
+            cb(currCell.col, currCell.row, cellColor)
             
         else: 
             currCell = cellStack[-1]
