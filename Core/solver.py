@@ -21,7 +21,7 @@ def solveMaze(maze, cbDraw):
     
     while not complete:
         for cell in activeCells:
-            #cbDraw(cell.col, cell.row, (0, 0, 255))
+            cbDraw(cell.col, cell.row, (0, 0, 255))
             cell.visited = True
             if generator.hasNeighbor(cell, maze):
                 neighborList.clear()
@@ -51,7 +51,7 @@ def solveMaze(maze, cbDraw):
                     rTemp = int((cell.row + neighbor.row) / 2)
                     cTemp = int((cell.col + neighbor.col) / 2)
                     maze[rTemp][cTemp].wall = False
-                    #cbDraw(cTemp, rTemp, (0, 0, 255))
+                    cbDraw(cTemp, rTemp, (0, 0, 255))
 
                     if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
                         complete = True
@@ -100,6 +100,7 @@ def solveMaze(maze, cbDraw):
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
 
         prevCell = currCell
+        visualiser.screenUpdate()
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))
