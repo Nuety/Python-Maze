@@ -6,11 +6,12 @@ So far:
   
   Maze visualiser
   
+  Maze solver (BFS)
+
 TODO:
-  Maze solver
-  
   Raspberry pi based LED decoration to display the maze
   
+  Better generator algorithm
   
 #Compiling and running
 

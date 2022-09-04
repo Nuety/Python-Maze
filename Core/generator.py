@@ -1,4 +1,5 @@
-
+from pydoc import visiblename
+import visualiser
 import random
 from xmlrpc.client import Boolean
 from colorama import init
@@ -8,11 +9,14 @@ init(autoreset=True)
 
 
 class cell:
-    def __init__(self, r, c):
+    def __init__(self, r, c, number):
         self.row = r
         self.col = c
+        self.id = number
     wall = True
     visited = False
+    
+    
 
 #Check if there is a unvisited neighborcell
 def hasNeighbor(cell, maze):
@@ -33,10 +37,8 @@ def hasNeighbor(cell, maze):
 
 
     for c in range(len(cellList)):
-        if cellList[c].visited == False:
+        if not cellList[c].visited:
             return True
-
-
     return False
 
 #get random unvisited neighborcell
@@ -57,7 +59,7 @@ def getNeighbor(cell, maze):
         cellList.append(maze[cell.row][cell.col - 2])
 
     for c in reversed(range(len(cellList))):
-        if cellList[c].visited == True:
+        if cellList[c].visited:
             del cellList[c]
 
     #return random cell from the neighborlist
@@ -68,6 +70,7 @@ def getNeighbor(cell, maze):
 def newMaze(width: int, height: int, cb):
     #random numbers
     random.seed()
+    inc = 0
 
     #stack to backtrack
     cellStack = []
@@ -82,7 +85,8 @@ def newMaze(width: int, height: int, cb):
     #init maze cells
     for i in range(cols):
         for j in range(rows):
-            mazeArr[i][j] = cell(i,j)
+            mazeArr[i][j] = cell(i,j, inc)
+            inc += 1
 
     #assign first cell
     cellStack.append(mazeArr[1][1])
@@ -109,7 +113,7 @@ def newMaze(width: int, height: int, cb):
             cTemp = int((currCell.col + neighbor.col) / 2)
             
             mazeArr[rTemp][cTemp].wall = False
-            
+
             cb(currCell.col, currCell.row, cellColor)
             cb(cTemp, rTemp, cellColor)
 
@@ -121,14 +125,14 @@ def newMaze(width: int, height: int, cb):
         else: 
             currCell = cellStack[-1]
             cellStack.pop()
-    
-    #create bool list to return
-    boolArr = [[True for i in range(rows)] for j in range(cols)]
+
+    #unset visited status
     for i in range(cols):
         for j in range(rows):
-            boolArr[i][j] = mazeArr[i][j].wall
+            mazeArr[i][j].visited = False
 
-    return boolArr
+        
+    return mazeArr
 
 
 
@@ -143,7 +147,7 @@ def DEBUG():
     for i in range(cols):
         print('')
         for j in range(rows):
-            if testarr[i][j] == True:
+            if testarr[i][j]:
                 print(Back.RED + '.', end='')
             else:
                 print(Back.GREEN + '.', end='')

@@ -24,11 +24,20 @@ def init(xWin, yWin, xCells, yCells):
     pygame.display.set_caption('MazeyMan')
     win.fill((70, 50, 30))
 
+def screenUpdate():
+    pygame.display.update()
+
+def draw(x, y, color):
+    pygame.draw.rect(win, (color), pygame.Rect(x * cellwidth, y * cellheight, cellwidth + 1, cellheight + 1))
+    for event in pygame.event.get():
+            if event.type == pygame.QUIT: 
+                sys.exit(0) 
+
 def cbvisualiser(x, y, color):
     pygame.draw.rect(win, (color), pygame.Rect(x * cellwidth, y * cellheight, cellwidth + 1, cellheight + 1))
     
-    pygame.display.update()
-    
+    screenUpdate()
+
     for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 sys.exit(0) 
