@@ -7,6 +7,7 @@ import sys
 import math
 
 
+
 #Breadth first search
 def solveMaze(maze, cbDraw):
     visitedCells = []
@@ -55,13 +56,15 @@ def solveMaze(maze, cbDraw):
 
                     if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
                         complete = True
-                        indexList.append([cell.id, neighbor.id])
+                        neighborList.clear()
+                        break
                     else:
                         activeCells.append(neighbor)
-
-                    
-
             activeCells.remove(cell)
+            if complete:
+                break
+
+
 
                         
     #when exit located
