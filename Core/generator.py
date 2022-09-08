@@ -160,7 +160,7 @@ def newMaze(width: int, height: int, cb):
             currCell = cellStack[-1]
             cellStack.pop()
 
-    #unset visited status
+    #unset scisited status
     for i in range(cols):
         for j in range(rows):
             mazeArr[i][j].visited = False
