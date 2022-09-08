@@ -16,7 +16,32 @@ class cell:
     wall = True
     visited = False
     
+#lazy redundancy
+def deadEnd(cell, maze):
+    cellList = []
     
+    #north
+    if cell.row - 2 >= 0:
+        cellList.append(maze[cell.row - 2][cell.col])
+    #south
+    if cell.row + 2 <= len(maze) - 1:
+        cellList.append(maze[cell.row + 2][cell.col])
+    #east
+    if cell.col + 2 <= len(maze[0]) - 1:
+        cellList.append(maze[cell.row][cell.col + 2])
+    #west
+    if cell.col - 2 >= 0:
+        cellList.append(maze[cell.row][cell.col - 2])
+            
+    #return random cell from the neighborlist
+    rnd = random.randint(0, len(cellList) - 1)
+    neighbor = cellList[rnd]
+
+    rTemp = int((cell.row + neighbor.row) / 2)
+    cTemp = int((cell.col + neighbor.col) / 2)
+    
+    visualiser.draw(cTemp, rTemp, (150, 102, 51))
+    maze[rTemp][cTemp].wall = False
 
 #Check if there is a unvisited neighborcell
 def hasNeighbor(cell, maze):
@@ -57,6 +82,9 @@ def getNeighbor(cell, maze):
     #west
     if cell.col - 2 >= 0:
         cellList.append(maze[cell.row][cell.col - 2])
+
+    if cellList == []:
+        return False
 
     for c in reversed(range(len(cellList))):
         if cellList[c].visited:
@@ -122,7 +150,13 @@ def newMaze(width: int, height: int, cb):
 
             cb(currCell.col, currCell.row, cellColor)
             
-        else: 
+        else:
+            #return random cell from the neighborlist
+            rnd = random.randint(0, 100)
+
+            if rnd < 2:
+                deadEnd(currCell, mazeArr)
+
             currCell = cellStack[-1]
             cellStack.pop()
 
