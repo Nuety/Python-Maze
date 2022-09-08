@@ -103,7 +103,9 @@ def solveMaze(maze, cbDraw):
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
 
         prevCell = currCell
-        visualiser.screenUpdate()
+
+        #Enable to trace solution
+        #visualiser.screenUpdate() 
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))

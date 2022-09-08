@@ -10,21 +10,36 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 120
+xCells = 60
 
 #vertical cells
-yCells = 80
+yCells = 60
+
+#show generation?
+showGenerator = False
 
 #solve?
 solve = True
 
+#show solution?
+showSolve = True
 
 visualiser.init(win_width, win_height, xCells, yCells)
 
-maze = generator.newMaze(int(xCells), int(yCells), visualiser.cbvisualiser)
+
+if showGenerator:
+    maze = generator.newMaze(int(xCells), int(yCells), visualiser.cbvisualiser)
+else:
+    maze = generator.newMaze(int(xCells), int(yCells), visualiser.draw)
+    visualiser.screenUpdate()
+
+
 
 if solve: 
-    solver.solveMaze(maze, visualiser.cbvisualiser)
+    if showSolve:
+        solver.solveMaze(maze, visualiser.cbvisualiser)
+    else:
+        solver.solveMaze(maze, visualiser.draw)
 
 #has while true so run last to keep still image of finished maze without crashing
 visualiser.visMaze()
