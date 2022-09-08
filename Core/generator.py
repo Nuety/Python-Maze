@@ -165,5 +165,5 @@ def newMaze(width: int, height: int, cb):
         for j in range(rows):
             mazeArr[i][j].visited = False
 
-        
+    visualiser.screenUpdate()
     return mazeArr
