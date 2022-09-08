@@ -22,7 +22,7 @@ def solveMaze(maze, cbDraw):
     
     while not complete:
         for cell in activeCells:
-            cbDraw(cell.col, cell.row, (0, 0, 255))
+            visualiser.draw(cell.col, cell.row, (0, 0, 255))
             cell.visited = True
             if generator.hasNeighbor(cell, maze):
                 neighborList.clear()
@@ -52,7 +52,7 @@ def solveMaze(maze, cbDraw):
                     rTemp = int((cell.row + neighbor.row) / 2)
                     cTemp = int((cell.col + neighbor.col) / 2)
                     maze[rTemp][cTemp].wall = False
-                    cbDraw(cTemp, rTemp, (0, 0, 255))
+                    visualiser.draw(cTemp, rTemp, (0, 0, 255))
 
                     if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
                         complete = True
@@ -63,6 +63,7 @@ def solveMaze(maze, cbDraw):
             activeCells.remove(cell)
             if complete:
                 break
+        visualiser.screenUpdate()
 
 
 
@@ -72,7 +73,6 @@ def solveMaze(maze, cbDraw):
         for j in range(len(maze[0])):
             if not maze[i][j].wall:
                 visualiser.draw(j, i, (150, 102, 51))
-    visualiser.screenUpdate()
 
     complete = False
 
@@ -82,7 +82,7 @@ def solveMaze(maze, cbDraw):
     #monkeybrain
     duoList = indexList[-1]
     currIndex = duoList[1]
-    visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
+    cbDraw(currCell.col, currCell.row, (0, 255, 0))
 
     maze1D = []
     #create a 1d list of the maze
@@ -109,5 +109,5 @@ def solveMaze(maze, cbDraw):
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))
-            visualiser.screenUpdate()
             complete = True
+            visualiser.screenUpdate()
