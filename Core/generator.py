@@ -154,7 +154,7 @@ def newMaze(width: int, height: int, cb):
             #return random cell from the neighborlist
             rnd = random.randint(0, 100)
 
-            if rnd < 2:
+            if rnd < 1:
                 deadEnd(currCell, mazeArr)
 
             currCell = cellStack[-1]
