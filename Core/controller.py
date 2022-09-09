@@ -1,3 +1,4 @@
+from inspect import _void
 import visualiser
 import generator
 import solver
@@ -10,10 +11,10 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 60
+xCells = 384
 
 #vertical cells
-yCells = 60
+yCells = 216
 
 #show generation?
 showGenerator = False
@@ -22,7 +23,7 @@ showGenerator = False
 solve = True
 
 #show solution?
-showSolve = True
+showSolve = False
 
 visualiser.init(win_width, win_height, xCells, yCells)
 
@@ -37,9 +38,9 @@ else:
 
 if solve: 
     if showSolve:
-        solver.solveMaze(maze, visualiser.cbvisualiser)
+        solver.solveMaze(maze, visualiser.screenUpdate)
     else:
-        solver.solveMaze(maze, visualiser.draw)
+        solver.solveMaze(maze, _void)
 
 #has while true so run last to keep still image of finished maze without crashing
 visualiser.visMaze()
