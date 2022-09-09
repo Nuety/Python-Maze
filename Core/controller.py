@@ -16,14 +16,8 @@ xCells = 384
 #vertical cells
 yCells = 216
 
-#show generation? 
-showGenerator = False
-
 #solve?
 solve = True
-
-#show solution?
-showSolve = False
 
 
 
