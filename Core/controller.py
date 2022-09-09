@@ -16,7 +16,7 @@ xCells = 384
 #vertical cells
 yCells = 216
 
-#show generation?
+#show generation? 
 showGenerator = False
 
 #solve?
@@ -25,22 +25,20 @@ solve = True
 #show solution?
 showSolve = False
 
+
+
+
 visualiser.init(win_width, win_height, xCells, yCells)
 
 
-if showGenerator:
-    maze = generator.newMaze(int(xCells), int(yCells), visualiser.cbvisualiser)
-else:
-    maze = generator.newMaze(int(xCells), int(yCells), visualiser.draw)
-    visualiser.screenUpdate()
+maze = generator.newMaze(int(xCells), int(yCells))
 
 
 
 if solve: 
-    if showSolve:
-        solver.solveMaze(maze, visualiser.screenUpdate)
-    else:
-        solver.solveMaze(maze, _void)
+    solver.solveMaze(maze)
 
-#has while true so run last to keep still image of finished maze without crashing
+
+# #has while true so run last to keep still image of finished maze without crashing
+visualiser.threadStop()
 visualiser.visMaze()

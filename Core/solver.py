@@ -1,14 +1,20 @@
+from concurrent.futures import thread
+from multiprocessing import Event
 from operator import index
 import visualiser
 import generator
 import pygame
 import sys
 import math
+import time 
+
+
+
 
 
 
 #Breadth first search
-def solveMaze(maze, cbDraw):
+def solveMaze(maze):
     activeCells = []
     neighborList = []
     indexList = []
@@ -17,6 +23,7 @@ def solveMaze(maze, cbDraw):
     #set first cell
     activeCells.append(maze[1][1])
     indexList.append([0, maze[1][1].id])
+    
     
     complete = False 
     while len(activeCells) != 0 and not complete:
@@ -57,11 +64,6 @@ def solveMaze(maze, cbDraw):
                 else:
                     activeCells.append(neighbor)
         indexAcc += 1
-        if indexAcc % len(maze) * 10 == 0:
-            visualiser.screenUpdate()
-    visualiser.screenUpdate()
-
-
 
                         
     #when exit located
@@ -73,6 +75,8 @@ def solveMaze(maze, cbDraw):
 
     currCell = maze[len(maze) - 2][len(maze[0]) - 2]
     prevCell = maze[len(maze) - 2][len(maze[0]) - 2]
+
+    visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
 
     #monkeybrain
     duoList = indexList[-1]
@@ -95,8 +99,7 @@ def solveMaze(maze, cbDraw):
         visualiser.draw(cTemp, rTemp, (0, 255, 0))
 
 
-        #Enable to trace solution
-        cbDraw()
+
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))
