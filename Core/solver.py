@@ -1,5 +1,4 @@
-from asyncio.windows_events import NULL
-from locale import currency
+from operator import index
 import visualiser
 import generator
 import pygame
@@ -10,60 +9,57 @@ import math
 
 #Breadth first search
 def solveMaze(maze, cbDraw):
-    visitedCells = []
     activeCells = []
     neighborList = []
     indexList = []
+    indexAcc = 0
 
     #set first cell
     activeCells.append(maze[1][1])
-    visitedCells.append(maze[1][1])
-    complete = False
+    indexList.append([0, maze[1][1].id])
     
-    while not complete:
-        for cell in activeCells:
-            visualiser.draw(cell.col, cell.row, (0, 0, 255))
-            cell.visited = True
-            if generator.hasNeighbor(cell, maze):
-                neighborList.clear()
-                
-                #north
-                if maze[cell.row - 1][cell.col].wall == False:
-                    neighborList.append(maze[cell.row - 2][cell.col])
-                #south
-                if maze[cell.row + 1][cell.col].wall == False:
-                    neighborList.append(maze[cell.row + 2][cell.col])
-                #east
-                if maze[cell.row][cell.col + 1].wall == False:
-                    neighborList.append(maze[cell.row][cell.col + 2])
-                #west
-                if maze[cell.row][cell.col - 1].wall == False:
-                    neighborList.append(maze[cell.row][cell.col - 2])
+    complete = False 
+    while len(activeCells) != 0 and not complete:
+        cell = activeCells.pop(0)
+        visualiser.draw(cell.col, cell.row, (0, 0, 255))
+        cell.visited = True
+        if generator.hasNeighbor(cell, maze):
+            neighborList.clear()
+            
+            #north
+            if maze[cell.row - 1][cell.col].wall == False:
+                neighborList.append(maze[cell.row - 2][cell.col])
+            #south
+            if maze[cell.row + 1][cell.col].wall == False:
+                neighborList.append(maze[cell.row + 2][cell.col])
+            #east
+            if maze[cell.row][cell.col + 1].wall == False:
+                neighborList.append(maze[cell.row][cell.col + 2])
+            #west
+            if maze[cell.row][cell.col - 1].wall == False:
+                neighborList.append(maze[cell.row][cell.col - 2])
 
-                for c in reversed(range(len(neighborList))):
-                    if neighborList[c].visited:
-                        del neighborList[c]
-                
-                for neighbor in neighborList:
-                    visitedCells.append(neighbor)
-                    
-                    indexList.append([cell.id, neighbor.id])
+            for c in reversed(range(len(neighborList))):
+                if neighborList[c].visited:
+                    del neighborList[c]
+            for neighbor in neighborList:
+                indexList.append([indexAcc, neighbor.id])
 
-                    rTemp = int((cell.row + neighbor.row) / 2)
-                    cTemp = int((cell.col + neighbor.col) / 2)
-                    maze[rTemp][cTemp].wall = False
-                    visualiser.draw(cTemp, rTemp, (0, 0, 255))
+                rTemp = int((cell.row + neighbor.row) / 2)
+                cTemp = int((cell.col + neighbor.col) / 2)
+                maze[rTemp][cTemp].wall = False
+                visualiser.draw(cTemp, rTemp, (0, 0, 255))
 
-                    if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
-                        complete = True
-                        neighborList.clear()
-                        break
-                    else:
-                        activeCells.append(neighbor)
-            activeCells.remove(cell)
-            if complete:
-                break
-        visualiser.screenUpdate()
+                if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
+                    complete = True
+                    neighborList.clear()
+                    break
+                else:
+                    activeCells.append(neighbor)
+        indexAcc += 1
+        if indexAcc % len(maze) * 10 == 0:
+            visualiser.screenUpdate()
+    visualiser.screenUpdate()
 
 
 
@@ -74,15 +70,13 @@ def solveMaze(maze, cbDraw):
             if not maze[i][j].wall:
                 visualiser.draw(j, i, (150, 102, 51))
 
-    complete = False
 
     currCell = maze[len(maze) - 2][len(maze[0]) - 2]
     prevCell = maze[len(maze) - 2][len(maze[0]) - 2]
 
     #monkeybrain
     duoList = indexList[-1]
-    currIndex = duoList[1]
-    cbDraw(currCell.col, currCell.row, (0, 255, 0))
+    currIndex = len(indexList) - 1
 
     maze1D = []
     #create a 1d list of the maze
@@ -90,24 +84,22 @@ def solveMaze(maze, cbDraw):
         for j in range(len(maze[0])):
             maze1D.append(maze[i][j])
 
-    while not complete:
-        for i in indexList:
-            if i[1] == currIndex:
-                duoList = i
+    while True:
+        duoList = indexList[currIndex]
         currIndex = duoList[0]
-        currCell = maze1D[currIndex]
+        currCell = maze1D[indexList[currIndex][1]]
 
         rTemp = int((currCell.row + prevCell.row) / 2)
         cTemp = int((currCell.col + prevCell.col) / 2)
-        visualiser.draw(cTemp, rTemp, (0, 255, 0))
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
+        visualiser.draw(cTemp, rTemp, (0, 255, 0))
 
-        prevCell = currCell
 
         #Enable to trace solution
-        #visualiser.screenUpdate() 
+        cbDraw()
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))
-            complete = True
             visualiser.screenUpdate()
+            break
+        prevCell = currCell
