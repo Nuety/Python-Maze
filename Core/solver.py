@@ -103,6 +103,5 @@ def solveMaze(maze):
         
         if currCell.row == 1 and currCell.col == 1:
             visualiser.draw(1, 1, (0, 255, 0))
-            visualiser.screenUpdate()
             break
         prevCell = currCell
