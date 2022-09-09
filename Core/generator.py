@@ -95,7 +95,7 @@ def getNeighbor(cell, maze):
 
     return cellList[rnd]
 
-def newMaze(width: int, height: int, cb):
+def newMaze(width: int, height: int):
     #random numbers
     random.seed()
     inc = 0
@@ -122,13 +122,6 @@ def newMaze(width: int, height: int, cb):
     currCell.visited = True
     currCell.wall = False
 
-    #color first cell
-    #cb(currCell.col, currCell.row, cellColor)
-
-    #place entry and exit holes
-    #cb(1, 0, cellColor)
-    #cb(rows-2, cols-1, cellColor)
-
     #main loop
     while len(cellStack) > 0:
         if hasNeighbor(currCell, mazeArr):
@@ -142,13 +135,13 @@ def newMaze(width: int, height: int, cb):
             
             mazeArr[rTemp][cTemp].wall = False
 
-            cb(currCell.col, currCell.row, cellColor)
-            cb(cTemp, rTemp, cellColor)
+            visualiser.draw(currCell.col, currCell.row, cellColor)
+            visualiser.draw(cTemp, rTemp, cellColor)
 
             cellStack.append(neighbor)
             currCell = neighbor
 
-            cb(currCell.col, currCell.row, cellColor)
+            visualiser.draw(currCell.col, currCell.row, cellColor)
             
         else:
             #return random cell from the neighborlist
