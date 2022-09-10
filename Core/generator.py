@@ -1,7 +1,4 @@
-from pydoc import visiblename
-import visualiser
 import random
-from xmlrpc.client import Boolean
 from colorama import init
 from colorama import Fore, Back, Style
 init(autoreset=True)
@@ -40,7 +37,7 @@ def deadEnd(cell, maze):
     rTemp = int((cell.row + neighbor.row) / 2)
     cTemp = int((cell.col + neighbor.col) / 2)
     
-    visualiser.draw(cTemp, rTemp, (150, 102, 51))
+    
     maze[rTemp][cTemp].wall = False
 
 #Check if there is a unvisited neighborcell
@@ -103,8 +100,6 @@ def newMaze(width: int, height: int):
     #stack to backtrack
     cellStack = []
 
-    cellColor = (150, 102, 51)
-
     #init array
     rows = int((width * 2) + 1)
     cols = int((height * 2) + 1)
@@ -135,13 +130,8 @@ def newMaze(width: int, height: int):
             
             mazeArr[rTemp][cTemp].wall = False
 
-            visualiser.draw(currCell.col, currCell.row, cellColor)
-            visualiser.draw(cTemp, rTemp, cellColor)
-
             cellStack.append(neighbor)
             currCell = neighbor
-
-            visualiser.draw(currCell.col, currCell.row, cellColor)
             
         else:
             #return random cell from the neighborlist
@@ -158,5 +148,4 @@ def newMaze(width: int, height: int):
         for j in range(rows):
             mazeArr[i][j].visited = False
 
-    visualiser.screenUpdate()
     return mazeArr

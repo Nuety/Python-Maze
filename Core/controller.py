@@ -16,23 +16,28 @@ xCells = 384
 #vertical cells
 yCells = 216
 
+# visualise?
+visualise = True
+
 #solve?
 solve = True
 
 
 
 
-visualiser.init(win_width, win_height, xCells, yCells)
+
 
 
 maze = generator.newMaze(int(xCells), int(yCells))
 
+if visualise:
+    visualiser.init(win_width, win_height, xCells, yCells)
+    visualiser.drawMaze(maze)
+
+    if solve: 
+        solver.solveMaze(maze)
 
 
-if solve: 
-    solver.solveMaze(maze)
-
-
-# #has while true so run last to keep still image of finished maze without crashing
-visualiser.threadStop()
-visualiser.visMaze()
+    #has while true so run last to keep still image of finished maze without crashing
+    visualiser.threadStop()
+    visualiser.visMaze()

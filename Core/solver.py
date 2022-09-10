@@ -67,10 +67,7 @@ def solveMaze(maze):
 
                         
     #when exit located
-    for i in range(len(maze)):
-        for j in range(len(maze[0])):
-            if not maze[i][j].wall:
-                visualiser.draw(j, i, (150, 102, 51))
+    visualiser.drawMaze(maze)
 
 
     currCell = maze[len(maze) - 2][len(maze[0]) - 2]

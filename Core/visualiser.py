@@ -55,9 +55,16 @@ def screenUpdate():
 def threadStop():
     tevent.set()
 
+def drawMaze(maze):
+    for i in range(len(maze)):
+        for j in range(len(maze[0])):
+            if not maze[i][j].wall:
+                draw(j, i, (150, 102, 51))
+
+
+
 def draw(x, y, color):
     pygame.draw.rect(win, (color), pygame.Rect(x * cellwidth, y * cellheight, cellwidth + 1, cellheight + 1))
-    
 
 def visMaze():
     while True:
