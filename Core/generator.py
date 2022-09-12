@@ -1,9 +1,4 @@
 import random
-from colorama import init
-from colorama import Fore, Back, Style
-init(autoreset=True)
-
-
 
 class cell:
     def __init__(self, r, c, number):

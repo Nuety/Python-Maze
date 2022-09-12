@@ -1,12 +1,7 @@
-from concurrent.futures import thread
-from multiprocessing import Event
 from operator import index
 import visualiser
 import generator
-import pygame
-import sys
-import math
-import time 
+import math 
 
 
 
@@ -19,6 +14,7 @@ def solveMaze(maze):
     neighborList = []
     indexList = []
     indexAcc = 0
+    colorBias = 0
 
     #set first cell
     activeCells.append(maze[1][1])
@@ -28,7 +24,11 @@ def solveMaze(maze):
     complete = False 
     while len(activeCells) != 0 and not complete:
         cell = activeCells.pop(0)
-        visualiser.draw(cell.col, cell.row, (0, 0, 255))
+        colorBias += 0.001
+        if colorBias > 0.3:
+            colorBias = 0
+        visualiser.draw(cell.col, cell.row, (180 - abs(math.sin(colorBias) * 50), 130 + abs(math.sin(colorBias) * 100) , 0))
+        
         cell.visited = True
         if generator.hasNeighbor(cell, maze):
             neighborList.clear()
@@ -55,7 +55,10 @@ def solveMaze(maze):
                 rTemp = int((cell.row + neighbor.row) / 2)
                 cTemp = int((cell.col + neighbor.col) / 2)
                 maze[rTemp][cTemp].wall = False
-                visualiser.draw(cTemp, rTemp, (0, 0, 255))
+
+                
+                visualiser.draw(cTemp, rTemp, (180 , 130 + abs(math.sin(colorBias) * 100) , 0))
+                
 
                 if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
                     complete = True
@@ -65,7 +68,7 @@ def solveMaze(maze):
                     activeCells.append(neighbor)
         indexAcc += 1
 
-                        
+        
     #when exit located
     visualiser.drawMaze(maze)
 

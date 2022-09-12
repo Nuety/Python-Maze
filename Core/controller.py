@@ -2,6 +2,8 @@ from inspect import _void
 import visualiser
 import generator
 import solver
+import time
+
 
 #customize maze
 
@@ -11,17 +13,16 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 384
+xCells = 192
 
 #vertical cells
-yCells = 216
+yCells = 108
 
 # visualise?
 visualise = True
 
 #solve?
 solve = True
-
 
 
 
@@ -39,5 +40,6 @@ if visualise:
 
 
     #has while true so run last to keep still image of finished maze without crashing
+    time.sleep(2)
     visualiser.threadStop()
     visualiser.visMaze()
