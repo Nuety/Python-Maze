@@ -8,6 +8,9 @@ class cell:
     wall = True
     visited = False
     
+    def info(self):
+        return (self.row, self.col, self.wall)
+    
 #lazy redundancy
 def deadEnd(cell, maze):
     cellList = []
