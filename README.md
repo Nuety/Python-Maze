@@ -6,7 +6,9 @@ So far:
   
   Maze visualiser
   
-  Maze solver (BFS)
+  Maze solver 
+  - BFS
+  - Really bad left hand on wall maze solver
 
 TODO:
   Raspberry pi based LED decoration to display the maze
