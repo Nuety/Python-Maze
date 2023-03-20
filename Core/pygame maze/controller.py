@@ -13,10 +13,10 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 30
+xCells = 50
 
 #vertical cells
-yCells = 30
+yCells = 50
 
 # visualise?
 visualise = True

@@ -116,7 +116,9 @@ def solveMazelefthand(maze):
     #rotation stuff
     #down left up right (in that order)
     directions = [[0,1], [-1,0], [0,-1], [1,0]]
+    #rot can overflow, i don't care
     rot = 0
+    left = directions[(rot-1)%4]
     forward = directions[rot]
     right = directions[(rot+1)%4]
     complete = False
@@ -127,23 +129,34 @@ def solveMazelefthand(maze):
         #continue running if front is not clear yet
         rnd = random.randint(0, 100)
         #randomly rotate right
-        if rnd < 25: 
-            #rotate right
+        if not maze[agent.row + left[1]][agent.col + left[0]].wall:
+            if rnd < 50:
+                #rotate left
+                rot = (rot - 1) % 4
+                left = directions[(rot-1)%4]
+                forward = directions[rot]
+                right = directions[(rot+1)%4]
+        elif not maze[agent.row + right[1]][agent.col + right[0]].wall:
+            if rnd < 50:
+                #rotate right
                 rot = (rot + 1) % 4
+                left = directions[(rot-1)%4]
                 forward = directions[rot]
                 right = directions[(rot+1)%4]
         #is forward wall?
         if maze[agent.row + forward[1]][agent.col + forward[0]].wall:
             #is right wall?
             
-            if not maze[agent.row + right[1]][agent.col + right[0]].wall:
+            if rnd < 50:
                 #rotate right
                 rot = (rot + 1) % 4
+                left = directions[(rot-1)%4]
                 forward = directions[rot]
                 right = directions[(rot+1)%4]
             else:
                 #rotate left
                 rot = (rot - 1) % 4
+                left = directions[(rot-1)%4]
                 forward = directions[rot]
                 right = directions[(rot+1)%4]
         else:
