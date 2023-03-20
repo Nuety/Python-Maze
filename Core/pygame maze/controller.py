@@ -13,10 +13,10 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 192
+xCells = 30
 
 #vertical cells
-yCells = 108
+yCells = 30
 
 # visualise?
 visualise = True
@@ -24,7 +24,10 @@ visualise = True
 #solve?
 solve = True
 
-
+#select solve method
+#bfs - lefthand
+#method = "bfs"
+method = "lefthand"
 
 
 
@@ -36,7 +39,12 @@ if visualise:
     visualiser.drawMaze(maze)
 
     if solve: 
-        solver.solveMaze(maze)
+        match method:
+            case "bfs":
+                solver.solveMazebfs(maze)
+            case "lefthand":
+                solver.solveMazelefthand(maze)
+                
 
 
     #has while true so run last to keep still image of finished maze without crashing

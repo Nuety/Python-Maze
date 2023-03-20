@@ -1,15 +1,15 @@
-from operator import index
 import visualiser
 import generator
 import math 
-
+import random
+import time
 
 
 
 
 
 #Breadth first search
-def solveMaze(maze):
+def solveMazebfs(maze):
     activeCells = []
     neighborList = []
     indexList = []
@@ -105,3 +105,89 @@ def solveMaze(maze):
             visualiser.draw(1, 1, (0, 255, 0))
             break
         prevCell = currCell
+
+#lefthand agent
+def solveMazelefthand(maze):
+    #draw agent
+    agent = maze[1][1]
+    visualiser.draw(agent.col, agent.row, (0,150,0))
+
+
+    #rotation stuff
+    #down left up right (in that order)
+    directions = [[0,1], [-1,0], [0,-1], [1,0]]
+    rot = 0
+    forward = directions[rot]
+    right = directions[(rot+1)%4]
+    complete = False
+    path = []
+    health = 250000
+
+    while not complete:
+        #continue running if front is not clear yet
+        rnd = random.randint(0, 100)
+        #randomly rotate right
+        if rnd < 25: 
+            #rotate right
+                rot = (rot + 1) % 4
+                forward = directions[rot]
+                right = directions[(rot+1)%4]
+        #is forward wall?
+        if maze[agent.row + forward[1]][agent.col + forward[0]].wall:
+            #is right wall?
+            
+            if not maze[agent.row + right[1]][agent.col + right[0]].wall:
+                #rotate right
+                rot = (rot + 1) % 4
+                forward = directions[rot]
+                right = directions[(rot+1)%4]
+            else:
+                #rotate left
+                rot = (rot - 1) % 4
+                forward = directions[rot]
+                right = directions[(rot+1)%4]
+        else:
+            #agent takes step in direction
+            visualiser.draw(agent.col, agent.row, (0,50,0))
+            agent = maze[agent.row + forward[1]][agent.col + forward[0]]
+            visualiser.draw(agent.col, agent.row, (0,150,0))
+            path.append(agent)
+            health -= 1
+            if health <= 0:
+                visualiser.draw(agent.col, agent.row, (255,0,0))
+                return
+        if agent.row == len(maze) - 2 and agent.col == len(maze[0]) - 2:
+            complete = True
+            break
+
+    #when exit located
+    visualiser.drawMaze(maze)
+
+    c1 = 1
+    c2 = 0
+
+    currCell = path[c1]
+    prevCell = path[c2]
+
+    visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
+
+    while True:
+        rTemp = int((currCell.row + prevCell.row) / 2)
+        cTemp = int((currCell.col + prevCell.col) / 2)
+        visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
+        visualiser.draw(cTemp, rTemp, (0, 255, 0))
+        c1 += 1
+        c2 += 1
+        currCell = path[c1]
+        prevCell = path[c2]
+
+
+
+        
+        if currCell.row == len(maze) - 2 and currCell.col == len(maze[0]) - 2:
+            visualiser.draw(len(maze) - 2, len(maze[0]) - 2, (0, 255, 0))
+            break
+        prevCell = currCell
+
+
+
