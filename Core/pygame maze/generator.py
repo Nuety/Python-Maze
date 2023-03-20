@@ -8,6 +8,9 @@ class cell:
     wall = True
     visited = False
     
+    def info(self):
+        return (self.row, self.col, self.wall)
+    
 #lazy redundancy
 def deadEnd(cell, maze):
     cellList = []
@@ -132,7 +135,7 @@ def newMaze(width: int, height: int):
             #return random cell from the neighborlist
             rnd = random.randint(0, 100)
 
-            if rnd < 3:
+            if rnd < 1:
                 deadEnd(currCell, mazeArr)
 
             currCell = cellStack[-1]
