@@ -13,7 +13,11 @@ xCells = 7
 #vertical cells
 yCells = 7
 
+#draw delay (in seconds)
+dspeed = 0.25
 
+#wait time (in seconds)
+waitime = 2
 
 while (True):
     maze = newMaze(int(xCells), int(yCells))
@@ -30,9 +34,9 @@ while (True):
             arduino.write(bytes(send, 'utf-8'))
     
     # Make entry green
-    arduino.write(bytes('SET 001 000 000 48 000\n', 'utf-8'))
-    # Make exit green
-    arduino.write(bytes('SET 013 014 000 48 000\n', 'utf-8'))
+    arduino.write(bytes('SET 001 000 000 048 000\n', 'utf-8'))
+    # Make exit blue
+    arduino.write(bytes('SET 013 014 000 000 048\n', 'utf-8'))
     arduino.write(bytes('PRINT\n'.encode()))
 
     solvedMaze = ardsolve.solveMaze(maze)
@@ -42,10 +46,15 @@ while (True):
         sendsolve = 'SET %03d %03d 000 048 000\n'%(x,y)
         arduino.write(bytes(sendsolve, 'utf-8'))
         arduino.write(bytes('PRINT\n'.encode()))
-        time.sleep(0.05)
+        time.sleep(dspeed)
+
+    # Make exit green when found
+    arduino.write(bytes('SET 013 014 000 048 000\n', 'utf-8'))
+    arduino.write(bytes('PRINT\n'.encode()))
 
 
 
-    time.sleep(2)
+
+    time.sleep(waitime)
     arduino.close()
 
