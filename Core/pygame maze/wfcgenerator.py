@@ -1,5 +1,5 @@
 import random
-import numpy
+import numpy as np
 
 class ecell:
     def __init__(self, r, c, up, right, down, left, ent, toent):
@@ -9,6 +9,7 @@ class ecell:
         self.entropy = ent
         self.totent = toent
     collapsed = False
+    isFound = False
     
     #debug i think
     def info(self):
@@ -26,6 +27,7 @@ class displaycell:
     def info(self):
         return (self.row, self.col, self.wall)
 
+#setup entropy and directions
 def setup(maze, cols, rows):
     #init maze cells
     for i in range(cols):
@@ -54,6 +56,10 @@ def setup(maze, cols, rows):
                 entropy = [0,1,2]
                 maze[i][j] = ecell(i,j, 0, 1, 1, 1, entropy, len(entropy))
 
+            elif j == rows-1 and i != 0:
+                entropy = [0,1,2]
+                maze[i][j] = ecell(i,j, 1, 0, 1, 1, entropy, len(entropy))
+
             elif i == cols-1 and j != 0:
                 entropy = [0,1,2]
                 maze[i][j] = ecell(i,j, 1, 1, 0, 1, entropy, len(entropy))
@@ -61,10 +67,6 @@ def setup(maze, cols, rows):
             elif j == 0 and i != 0:
                 entropy = [0,1,2]
                 maze[i][j] = ecell(i,j, 1, 1, 1, 0, entropy, len(entropy))
-                
-            elif j == rows-1 and i != 0:
-                entropy = [0,1,2]
-                maze[i][j] = ecell(i,j, 1, 0, 1, 1, entropy, len(entropy))
                 
             #middle
             else:
@@ -93,27 +95,6 @@ def refreshEntropy(cell):
     elif dir == [1,0,1,0] or dir == [0,1,0,1]:
         cell.entropy = [0,2]
         cell.totent = 2
-    # if dir.all() == all([0,0,0,0]):
-    #     cell.entropy = []
-    #     cell.totent = 0
-    #     cell.collapsed = True
-    # elif dir.all() == all([1,1,1,1]):
-    #     cell.entropy = [0,1,2,3,4]
-    #     cell.totent = 5
-    # elif dir.all() == all([1,0,0,0]) or dir.all() == all([0,1,0,0]) or dir.all() == all([0,0,1,0]) or dir.all() == all([0,0,0,1]):
-    #     cell.entropy = [4]
-    #     cell.totent = 1
-    # elif dir.all() == all([1,1,0,0]) or dir.all() == all([0,1,1,0]) or dir.all() == all([0,0,1,1]) or dir.all() == all([1,0,0,1]):
-    #     cell.entropy = [2,4]
-    #     cell.totent = 2
-    # elif dir.all() == all([1,1,1,0]) or dir.all() == all([0,1,1,1]) or dir.all() == all([1,0,1,1]) or dir.all() == all([1,1,0,1]):
-    #     cell.entropy = [1,2,3,4]
-    #     cell.totent = 4
-    # elif dir.all() == all([1,0,1,0]) or dir.all() == all([0,1,0,1]):
-    #     cell.entropy = [1,4]
-    #     cell.totent = 2
-    
-
 
 #check if maze has more entropy
 def totalentropy(maze):
@@ -126,29 +107,62 @@ def totalentropy(maze):
 #select cell tile
 def selectTile(cell):
     rnd = random.randint(0, cell.totent-1)
-    newEntropy = cell.entropy[rnd]
+    try:
+        newEntropy = cell.entropy[rnd]
+    except:
+        newEntropy = cell.entropy
     cell.totent = 1
     cell.entropy = newEntropy
 
+#find neighbor which is not collapsed
+def locateNeighbor(maze, cell):
+    cellList = []
 
-#find cell with lowest entropy
-def getlowestentropy(maze):
-    #rnd to randomly select new "lowest"
-    rnd = random.randint(0, 1)
-    for i in range(len(maze)):
-        for j in range(len(maze[0])):
-            if not maze[i][j].collapsed:
-                currCell = maze[i][j]
+    if not hasNeighbor(cell, maze):
+        return cellList
 
-    for i in range(len(maze)):
-        for j in range(len(maze[0])):
-            try:
-                if maze[i][j].totent <= currCell.totent and not maze[i][j].collapsed and rnd == 1:
-                    currCell = maze[i][j]
-            except:
-                return -1
+    #north
+    if cell.row - 1 >= 0:
+        cellList.append(maze[cell.row - 1][cell.col])
+    #south
+    if cell.row + 1 <= len(maze) - 1:
+        cellList.append(maze[cell.row + 1][cell.col])
+    #east
+    if cell.col + 1 <= len(maze[0]) - 1:
+        cellList.append(maze[cell.row][cell.col + 1])
+    #west
+    if cell.col - 1 >= 0:
+        cellList.append(maze[cell.row][cell.col - 1])
 
-    return currCell
+    if cellList == []:
+        return False
+
+    for c in reversed(range(len(cellList))):
+        if cellList[c].collapsed:
+            del cellList[c]
+    return cellList
+
+#Check if there is a unvisited neighborcell
+def hasNeighbor(cell, maze):
+    cellList = []
+
+    #north
+    if cell.row - 1 >= 0:
+        cellList.append(maze[cell.row - 1][cell.col])
+    #south
+    if cell.row + 1 <= len(maze) - 1:
+        cellList.append(maze[cell.row + 1][cell.col])
+    #east
+    if cell.col + 1 <= len(maze[0]) - 1:
+        cellList.append(maze[cell.row][cell.col + 1])
+    #west
+    if cell.col - 1 >= 0:
+        cellList.append(maze[cell.row][cell.col - 1])
+    
+    for c in range(len(cellList)):
+        if not cellList[c].collapsed:
+            return True
+    return False
 
 def findRotation(cell):
     #rotation of cell
@@ -169,7 +183,7 @@ def findRotation(cell):
         #random to skip selection so not all will look down
         rnd = random.randint(0,3)
 
-        temp = numpy.subtract(cellRot, tileRot)
+        temp = np.subtract(cellRot, tileRot)
         negatives = 0
         for num in temp:
             if num == -1:
@@ -185,16 +199,13 @@ def findRotation(cell):
 
         #number of correct positions (not -1)
         count = 0
-        temp = numpy.subtract(cellRot, tileRot)
+        temp = np.subtract(cellRot, tileRot)
         for num in temp:
             if num != -1:
                 count += 1
 
         if count == 4:
             return tileRot
-
-
-
 
 def newMaze(width: int, height: int):
     #random numbers
@@ -218,41 +229,80 @@ def newMaze(width: int, height: int):
     setup(cellArr, height, width)
 
 
+    cellStack = [cellArr[0][0]]
+    
+
     #main loop
-    while totalentropy(cellArr) > width*height:
-        currCell = getlowestentropy(cellArr)
-        if not currCell == 0:
-            selectTile(currCell)
-            currCell.collapsed = True
+    while totalentropy(cellArr) > width*height and len(cellStack) > 0:
+        currCell = cellStack.pop()
 
-            rotation = findRotation(currCell)
+        # currCell = getlowestentropy(cellArr)
+        if currCell.totent == 0:
+            continue
+        selectTile(currCell)
+        currCell.collapsed = True
 
-            #find which corridors to close off
-            #array to know which neighbors to close from
-            closeArr = numpy.subtract(currCell.dir, rotation)
+        rotation = findRotation(currCell)
 
-            #close current cell walls by setting rotation
-            currCell.dir = rotation
+        #find which corridors to close off
+        #array to know which neighbors to close from
+        closeArr = np.subtract(currCell.dir, rotation)
 
-            #close walls from neighbors
-            r = currCell.row - 1
-            c = currCell.col - 1
-            #up
-            if closeArr[0] == 1 and cellArr[r-1][c].dir[2] != 0:
-                cellArr[r-1][c].dir[2] = cellArr[r-1][c].dir[2] - 1
-                refreshEntropy(cellArr[r-1][c])
-            #right
-            if closeArr[1] == 1 and cellArr[r][c+1].dir[3] != 0:
-                cellArr[r][c+1].dir[3] = cellArr[r][c+1].dir[3] - 1
-                refreshEntropy(cellArr[r][c+1])
-            #down
-            if closeArr[2] == 1 and cellArr[r+1][c].dir[0] != 0:
-                cellArr[r+1][c].dir[0] = cellArr[r+1][c].dir[0] - 1
-                refreshEntropy(cellArr[r+1][c])
-            #left
-            if closeArr[3] == 1 and cellArr[r][c-1].dir[1] != 0 :
-                cellArr[r][c-1].dir[1] = cellArr[r][c-1].dir[1] - 1
-                refreshEntropy(cellArr[r][c-1])
+        #close current cell walls by setting rotation
+        currCell.dir = rotation
+
+        #close walls from neighbors
+        r = currCell.row - 1
+        c = currCell.col - 1
+        #up
+        if closeArr[0] == 1 and cellArr[r-1][c].dir[2] != 0:
+            cellArr[r-1][c].dir[2] = cellArr[r-1][c].dir[2] - 1
+            refreshEntropy(cellArr[r-1][c])
+        #right
+        if closeArr[1] == 1 and cellArr[r][c+1].dir[3] != 0:
+            cellArr[r][c+1].dir[3] = cellArr[r][c+1].dir[3] - 1
+            refreshEntropy(cellArr[r][c+1])
+        #down
+        if closeArr[2] == 1 and cellArr[r+1][c].dir[0] != 0:
+            cellArr[r+1][c].dir[0] = cellArr[r+1][c].dir[0] - 1
+            refreshEntropy(cellArr[r+1][c])
+        #left
+        if closeArr[3] == 1 and cellArr[r][c-1].dir[1] != 0 :
+            cellArr[r][c-1].dir[1] = cellArr[r][c-1].dir[1] - 1
+            refreshEntropy(cellArr[r][c-1])
+        
+        neighbors = locateNeighbor(cellArr, currCell)
+        if neighbors == []:
+            continue
+        else:
+            for neighbor in neighbors:
+                if not neighbor.isFound:
+                    if len(cellStack) == 0:
+                        cellStack.append(neighbor)
+                    else:
+                        low = 0
+                        high = len(cellStack) - 1
+
+                        while low < high:
+                            mid = int(np.floor((high+low)/2))
+
+                            if cellStack[mid].totent > neighbor.totent:
+                                low = mid + 1
+                            elif cellStack[mid].totent < neighbor.totent:
+                                high = mid
+
+                            else:
+                                break
+                        neighbor.isFound = True
+                        cellStack.insert(high, neighbor)
+
+
+
+
+        # print(len(cellStack))
+
+
+
 
     for row in cellArr:
         for cell in row:
@@ -267,8 +317,5 @@ def newMaze(width: int, height: int):
                 mazeArr[int((2 * cell.row) + 2)][int((2 * cell.col) + 1)].wall = False
             if cell.dir[3] == 1:
                 mazeArr[int((2 * cell.row) + 1)][int((2 * cell.col))].wall = False
-
-
-
 
     return mazeArr

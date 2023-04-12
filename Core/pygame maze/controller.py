@@ -14,10 +14,11 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 25
+xCells = 31
+
 
 #vertical cells
-yCells = 25
+yCells = 31
 
 #select generator
 #wave function collapse "wfc"
@@ -28,7 +29,7 @@ generatormethod = "wfc"
 visualise = True
 
 #solve?
-solve = True
+solve = False
 
 #select solve method
 # "bfs" breadth first search
