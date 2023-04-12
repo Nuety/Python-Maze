@@ -8,6 +8,7 @@ class cell:
     wall = True
     visited = False
     
+    #debug i think
     def info(self):
         return (self.row, self.col, self.wall)
     
@@ -90,6 +91,7 @@ def getNeighbor(cell, maze):
 
     return cellList[rnd]
 
+#depth first generator
 def newMaze(width: int, height: int):
     #random numbers
     random.seed()
@@ -141,7 +143,7 @@ def newMaze(width: int, height: int):
             currCell = cellStack[-1]
             cellStack.pop()
 
-    #unset scisited status
+    #unset visited status
     for i in range(cols):
         for j in range(rows):
             mazeArr[i][j].visited = False

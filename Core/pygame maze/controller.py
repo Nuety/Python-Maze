@@ -3,6 +3,7 @@ import visualiser
 import generator
 import solver
 import time
+import wfcgenerator
 
 
 #customize maze
@@ -13,10 +14,15 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 50
+xCells = 25
 
 #vertical cells
-yCells = 50
+yCells = 25
+
+#select generator
+#wave function collapse "wfc"
+#Depth first "df"
+generatormethod = "wfc"
 
 # visualise?
 visualise = True
@@ -25,14 +31,18 @@ visualise = True
 solve = True
 
 #select solve method
-#bfs - lefthand
-#method = "bfs"
-method = "lefthand"
+# "bfs" breadth first search
+# "lefthand" - this is really bad
+method = "bfs"
 
 
 
+match generatormethod:
+    case "df":
+        maze = generator.newMaze(int(xCells), int(yCells))
+    case "wfc":
+        maze = wfcgenerator.newMaze(int(xCells), int(yCells))
 
-maze = generator.newMaze(int(xCells), int(yCells))
 
 if visualise:
     visualiser.init(win_width, win_height, xCells, yCells)

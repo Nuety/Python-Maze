@@ -32,7 +32,7 @@ def init(xWin, yWin, xCells, yCells):
 
     pygame.init()
     win = pygame.display.set_mode((xWin, yWin))
-    pygame.display.set_caption('MazeyMan 1.3')
+    pygame.display.set_caption('MazeyMan 1.4.2')
     win.fill((70, 50, 30))
 
     #delicate multithreading stuff
