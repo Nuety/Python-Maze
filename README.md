@@ -3,6 +3,8 @@ Simple Maze generator
 
 So far:
   Maze generator
+  - depth first
+  - (slow) wave function collapse
   
   Maze visualiser
   
@@ -11,8 +13,7 @@ So far:
   - Really bad left hand on wall maze solver
 
 TODO:
-  - Raspberry pi based LED decoration to display the maze (pretty much done now)
-  - possibly Better generator algorithm
+  - possibly Better generator algorithms
   
 #Compiling and running
 
