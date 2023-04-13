@@ -10,8 +10,22 @@ import wfcgenerator
 
 
 #window size
-win_width = 1920
-win_height = 1080
+#"720"
+#"1080"
+#"1440"
+winssize = 1440
+
+match winssize:
+    case 720:
+        win_width = 1280
+        win_height = 720
+    case 1080:
+        win_width = 1920
+        win_height = 1080
+    case 1440:
+        win_width = 2560
+        win_height = 1440
+
 
 #horizontal cells
 xCells = 100
