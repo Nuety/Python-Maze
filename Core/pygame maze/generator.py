@@ -1,5 +1,5 @@
 import random
-
+import functions
 class cell:
     def __init__(self, r, c, number):
         self.row = r
@@ -7,6 +7,7 @@ class cell:
         self.id = number
     wall = True
     visited = False
+    isFound = False
     
     #debug i think
     def info(self):

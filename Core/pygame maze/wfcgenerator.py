@@ -22,6 +22,7 @@ class displaycell:
         self.id = inc
     wall = True
     visited = False
+    isFound = False
     
     #debug i think
     def info(self):

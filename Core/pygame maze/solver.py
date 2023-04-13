@@ -5,9 +5,6 @@ import random
 import time
 
 
-
-
-
 #Breadth first search
 def solveMazebfs(maze):
     activeCells = []
@@ -50,22 +47,25 @@ def solveMazebfs(maze):
                 if neighborList[c].visited:
                     del neighborList[c]
             for neighbor in neighborList:
-                indexList.append([indexAcc, neighbor.id])
+                if not neighbor.isFound:
 
-                rTemp = int((cell.row + neighbor.row) / 2)
-                cTemp = int((cell.col + neighbor.col) / 2)
-                maze[rTemp][cTemp].wall = False
+                    indexList.append([indexAcc, neighbor.id])
 
-                
-                visualiser.draw(cTemp, rTemp, (180 , 130 + abs(math.sin(colorBias) * 100) , 0))
-                
+                    rTemp = int((cell.row + neighbor.row) / 2)
+                    cTemp = int((cell.col + neighbor.col) / 2)
+                    maze[rTemp][cTemp].wall = False
 
-                if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
-                    complete = True
-                    neighborList.clear()
-                    break
-                else:
-                    activeCells.append(neighbor)
+                    
+                    visualiser.draw(cTemp, rTemp, (180 , 130 + abs(math.sin(colorBias) * 100) , 0))
+                    
+
+                    if neighbor.row == len(maze) - 2 and neighbor.col == len(maze[0]) - 2:
+                        complete = True
+                        neighborList.clear()
+                        break
+                    else:
+                        activeCells.append(neighbor)
+                        neighbor.isFound = True
         indexAcc += 1
 
         
