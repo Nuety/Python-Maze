@@ -22,8 +22,6 @@ def init(xWin, yWin, xCells, yCells):
     global win
     global cell_Hor
     global cell_Ver
-
-
     cell_Hor = xCells
     cell_Ver = yCells
 
@@ -60,8 +58,6 @@ def drawMaze(maze):
         for j in range(len(maze[0])):
             if not maze[i][j].wall:
                 draw(j, i, (150, 102, 51))
-
-
 
 def draw(x, y, color):
     pygame.draw.rect(win, (color), pygame.Rect(x * cellwidth, y * cellheight, cellwidth + 1, cellheight + 1))

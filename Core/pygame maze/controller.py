@@ -14,11 +14,11 @@ win_width = 1920
 win_height = 1080
 
 #horizontal cells
-xCells = 31
+xCells = 250
 
 
 #vertical cells
-yCells = 31
+yCells = 250
 
 #select generator
 #wave function collapse "wfc"
@@ -26,7 +26,7 @@ yCells = 31
 generatormethod = "wfc"
 
 # visualise?
-visualise = True
+visualise = False
 
 #solve?
 solve = False

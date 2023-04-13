@@ -96,14 +96,6 @@ def refreshEntropy(cell):
         cell.entropy = [0,2]
         cell.totent = 2
 
-#check if maze has more entropy
-def totalentropy(maze):
-    totalentropy = 0
-    for i in range(len(maze)):
-        for j in range(len(maze[0])):
-            totalentropy += maze[i][j].totent
-    return totalentropy
-
 #select cell tile
 def selectTile(cell):
     rnd = random.randint(0, cell.totent-1)
@@ -174,7 +166,7 @@ def findRotation(cell):
         case 0:
             tileRot = [0,1,0,1]
         case 1:
-            tileRot = [1,0,0,1]
+            tileRot = [0,0,1,1]
         #this must exist
         case 2:
             tileRot = [1,0,0,0]
@@ -193,7 +185,7 @@ def findRotation(cell):
             tileRot = newRot
 
         
-        if rnd == 1:
+        if rnd != 0:
             newRot = [tileRot[3], tileRot[0], tileRot[1], tileRot[2]]
             tileRot = newRot
 
@@ -233,7 +225,7 @@ def newMaze(width: int, height: int):
     
 
     #main loop
-    while totalentropy(cellArr) > width*height and len(cellStack) > 0:
+    while len(cellStack) > 0:
         currCell = cellStack.pop()
 
         # currCell = getlowestentropy(cellArr)
@@ -280,29 +272,8 @@ def newMaze(width: int, height: int):
                     if len(cellStack) == 0:
                         cellStack.append(neighbor)
                     else:
-                        low = 0
-                        high = len(cellStack) - 1
-
-                        while low < high:
-                            mid = int(np.floor((high+low)/2))
-
-                            if cellStack[mid].totent > neighbor.totent:
-                                low = mid + 1
-                            elif cellStack[mid].totent < neighbor.totent:
-                                high = mid
-
-                            else:
-                                break
                         neighbor.isFound = True
-                        cellStack.insert(high, neighbor)
-
-
-
-
-        # print(len(cellStack))
-
-
-
+                        cellStack.append(neighbor)
 
     for row in cellArr:
         for cell in row:
