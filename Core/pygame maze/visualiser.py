@@ -33,7 +33,7 @@ def init(xWin, yWin, xCells, yCells):
     pygame.display.set_caption('MazeyMan 1.4.2')
     win.fill((70, 50, 30))
 
-    #delicate multithreading stuff
+    #deligate multithreading stuff
     global tevent
     tevent = threading.Event()
     gui = threading.Thread(target=guiLoop, args=(tevent,))

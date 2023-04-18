@@ -6,7 +6,7 @@ import time
 
 
 #Breadth first search
-def solveMazebfs(maze):
+def solveMazebfs(maze, solvetimestep):
     activeCells = []
     neighborList = []
     indexList = []
@@ -24,6 +24,7 @@ def solveMazebfs(maze):
         colorBias += 0.001
         if colorBias > 0.3:
             colorBias = 0
+
         visualiser.draw(cell.col, cell.row, (180 - abs(math.sin(colorBias) * 50), 130 + abs(math.sin(colorBias) * 100) , 0))
         
         cell.visited = True
@@ -95,6 +96,8 @@ def solveMazebfs(maze):
 
         rTemp = int((currCell.row + prevCell.row) / 2)
         cTemp = int((currCell.col + prevCell.col) / 2)
+        time.sleep(solvetimestep)
+
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
         visualiser.draw(cTemp, rTemp, (0, 255, 0))
 
@@ -187,8 +190,9 @@ def solveMazelefthand(maze):
     while True:
         rTemp = int((currCell.row + prevCell.row) / 2)
         cTemp = int((currCell.col + prevCell.col) / 2)
-        visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
+        
         visualiser.draw(cTemp, rTemp, (0, 255, 0))
+        visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
         c1 += 1
         c2 += 1
         currCell = path[c1]

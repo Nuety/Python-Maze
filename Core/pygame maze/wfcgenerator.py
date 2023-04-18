@@ -221,8 +221,10 @@ def newMaze(width: int, height: int):
 
     setup(cellArr, height, width)
 
+    rnd1 = random.randint(0, height)
+    rnd2 = random.randint(0, height)
 
-    cellStack = [cellArr[0][0]]
+    cellStack = [cellArr[rnd1][rnd2]]
     
 
     #main loop

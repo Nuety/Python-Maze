@@ -28,11 +28,11 @@ match winssize:
 
 
 #horizontal cells
-xCells = 100
+xCells = 256
 
 
 #vertical cells
-yCells = 100
+yCells = 144
 
 #select generator
 #wave function collapse "wfc"
@@ -44,6 +44,8 @@ visualise = True
 
 #solve?
 solve = True
+#solution tick rate in seconds (0.01 = 100 ticks/sec)
+solutionspeed = 0.01
 
 #select solve method
 # "bfs" breadth first search
@@ -66,7 +68,7 @@ if visualise:
     if solve: 
         match method:
             case "bfs":
-                solver.solveMazebfs(maze)
+                solver.solveMazebfs(maze, solutionspeed)
             case "lefthand":
                 solver.solveMazelefthand(maze)
                 
