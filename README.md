@@ -18,3 +18,11 @@ TODO:
 #Compiling and running
 
 path-to-repo\Core>python3 controller.py
+
+
+
+Updated to 2.1
+Minor improvesments to Kivy implementation
+
+Updated to 2.0
+Added Kivy implementation to have main menu
