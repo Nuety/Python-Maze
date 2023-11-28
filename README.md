@@ -17,7 +17,7 @@ TODO:
   
 #Compiling and running
 
-path-to-repo\Core>python3 controller.py
+path-to-repo\Core\pygame maze>python3 controller.py
 
 
 
