@@ -1,80 +1,172 @@
-from inspect import _void
+from kivy.app import App
+from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
 import visualiser
 import generator
 import solver
 import time
 import wfcgenerator
 
+class MazeScreen(Screen):
+    def __init__(self, maze, **kwargs):
+        super(MazeScreen, self).__init__(**kwargs)
+        self.maze = maze
+        layout = BoxLayout(orientation='vertical')
+        layout.add_widget(Label(text='Maze Visualization'))
+        # layout.add_widget(visualiser.get_canvas())  # Assuming get_canvas() returns the Kivy canvas
+        back_button = Button(text='Back to Main Menu', on_press=self.go_to_main_menu)
+        layout.add_widget(back_button)
+        self.add_widget(layout)
 
-#customize maze
+    def go_to_main_menu(self, instance):
+        self.manager.current = 'main_menu'
+
+class MainMenu(Screen):
+    def __init__(self, settings, **kwargs):
+        super(MainMenu, self).__init__(**kwargs)
+        self.settings = settings
+        layout = BoxLayout(orientation='vertical')
+        self.start_button = Button(text=self.get_start_button_text(), on_press=self.start_pressed)
+        settings_button = Button(text='Settings', on_press=self.go_to_settings)
+        layout.add_widget(Label(text='Maze App'))
+        layout.add_widget(self.start_button)
+        layout.add_widget(settings_button)
+        self.add_widget(layout)
+
+    def get_start_button_text(self):
+        if self.settings_are_configured():
+            return 'Start'
+        else:
+            return 'Start with Default Settings'
+
+    def settings_are_configured(self):
+        return all(value != '' for value in self.settings.values())
+
+    def start_pressed(self, instance):
+        if self.settings_are_configured():
+            x_cells = int(self.settings['x_cells'])
+            y_cells = int(self.settings['y_cells'])
+
+            match self.settings['generator_method']:
+                case "df":
+                    maze = generator.newMaze(x_cells, y_cells)
+                case "wfc":
+                    maze = wfcgenerator.newMaze(x_cells, y_cells)
+
+            win_width = int(self.settings['window_size_x'])
+            win_height = int(self.settings['window_size_y'])
+            visualiser.init(win_width, win_height, x_cells, y_cells)
+            visualiser.drawMaze(maze)
+
+            # Switch to the MazeScreen for visualization
+            maze_screen = MazeScreen(maze, name='maze_screen')
+            self.manager.add_widget(maze_screen)
+            self.manager.current = 'maze_screen'
+
+            if self.settings['solve']:
+                method = self.settings['method']
+                if method == "bfs":
+                    solutionspeed = float(self.settings['solutionspeed'])
+                    solver.solveMazebfs(maze, solutionspeed)
+                elif method == "lefthand":
+                    solver.solveMazelefthand(maze)
+
+            # Add any additional logic you need after starting the maze
+            #has while true so run last to keep still image of finished maze without crashing
+            time.sleep(0.5)
+            visualiser.threadStop()
+
+    def go_to_settings(self, instance):
+        self.manager.transition.direction = "left"
+        self.manager.current = 'settings'
+
+class Settings(Screen):
+    def __init__(self, main_menu, **kwargs):
+        super(Settings, self).__init__(**kwargs)
+        self.main_menu = main_menu
+        layout = BoxLayout(orientation='vertical')
+        layout.add_widget(Label(text='Settings'))
+        
+        # Window Size X
+        layout.add_widget(Label(text='Window Width'))
+        self.window_size_input_x = TextInput(text=str(self.main_menu.settings['window_size_x']))
+        layout.add_widget(self.window_size_input_x)
+
+        # Window Size Y
+        layout.add_widget(Label(text='Window Height'))
+        self.window_size_input_y = TextInput(text=str(self.main_menu.settings['window_size_y']))
+        layout.add_widget(self.window_size_input_y)
+
+        # X Cells
+        layout.add_widget(Label(text='X Cells'))
+        self.x_cells_input = TextInput(text=str(self.main_menu.settings['x_cells']))
+        layout.add_widget(self.x_cells_input)
+
+        # Y Cells
+        layout.add_widget(Label(text='Y Cells'))
+        self.y_cells_input = TextInput(text=str(self.main_menu.settings['y_cells']))
+        layout.add_widget(self.y_cells_input)
+
+        # Generator Method
+        layout.add_widget(Label(text='Generator Method'))
+        self.generator_method_input = TextInput(text=self.main_menu.settings['generator_method'])
+        layout.add_widget(self.generator_method_input)
+
+        # Solve Method
+        layout.add_widget(Label(text='Solve Method'))
+        self.solve_method_input = TextInput(text=self.main_menu.settings['method'])
+        layout.add_widget(self.solve_method_input)
+
+        save_button = Button(text='Save Settings', on_press=self.save_settings)
+        back_button = Button(text='Back to Main Menu', on_press=self.go_to_main_menu)
+        layout.add_widget(save_button)
+        layout.add_widget(back_button)
+        self.add_widget(layout)
 
 
-#window size
-#"720"
-#"1080"
-#"1440"
-winssize = 1440
+    def save_settings(self, instance):
+        # Update the settings dictionary with the new values
+        self.main_menu.settings['window_size_x'] = self.window_size_input_x.text
+        self.main_menu.settings['window_size_y'] = self.window_size_input_y.text
+        self.main_menu.settings['x_cells'] = self.x_cells_input.text
+        self.main_menu.settings['y_cells'] = self.y_cells_input.text
+        self.main_menu.settings['generator_method'] = self.generator_method_input.text
+        self.main_menu.settings['method'] = self.solve_method_input.text
 
-match winssize:
-    case 720:
-        win_width = 1280
-        win_height = 720
-    case 1080:
-        win_width = 1920
-        win_height = 1080
-    case 1440:
-        win_width = 2560
-        win_height = 1440
+        # Update the start button text in the main menu
+        self.main_menu.start_button.text = self.main_menu.get_start_button_text()
 
+        # Go back to the main menu screen
+        self.go_to_main_menu(self)
 
-#horizontal cells
-xCells = 256
+    def go_to_main_menu(self, instance):
+        self.manager.transition.direction = "right"
+        self.manager.current = 'main_menu'
 
+class MazeApp(App):
+    def build(self):
+        settings = {
+            'window_size_x': '2560',
+            'window_size_y': '1440',
+            'x_cells': '100',
+            'y_cells': '100',
+            'generator_method': 'df',
+            'solve': True,
+            'method': 'bfs',
+            'solutionspeed': '0.00',
+        }
+        sm = ScreenManager()
+        main_menu = MainMenu(settings, name='main_menu')
+        settings_screen = Settings(main_menu, name='settings')
+        sm.add_widget(main_menu)
+        sm.add_widget(settings_screen)
+        return sm
 
-#vertical cells
-yCells = 144
-
-#select generator
-#wave function collapse "wfc"
-#Depth first "df"
-generatormethod = "wfc"
-
-# visualise?
-visualise = True
-
-#solve?
-solve = True
-#solution tick rate in seconds (0.01 = 100 ticks/sec)
-solutionspeed = 0.01
-
-#select solve method
-# "bfs" breadth first search
-# "lefthand" - this is really bad
-method = "bfs"
+if __name__ == '__main__':
+    MazeApp().run()
 
 
-
-match generatormethod:
-    case "df":
-        maze = generator.newMaze(int(xCells), int(yCells))
-    case "wfc":
-        maze = wfcgenerator.newMaze(int(xCells), int(yCells))
-
-
-if visualise:
-    visualiser.init(win_width, win_height, xCells, yCells)
-    visualiser.drawMaze(maze)
-
-    if solve: 
-        match method:
-            case "bfs":
-                solver.solveMazebfs(maze, solutionspeed)
-            case "lefthand":
-                solver.solveMazelefthand(maze)
-                
-
-
-    #has while true so run last to keep still image of finished maze without crashing
-    time.sleep(2)
-    visualiser.threadStop()
-    visualiser.visMaze()

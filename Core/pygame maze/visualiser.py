@@ -28,7 +28,6 @@ def init(xWin, yWin, xCells, yCells):
     cellwidth = xWin / ((cell_Hor * 2) + 1)
     cellheight = yWin / ((cell_Ver * 2) + 1)
 
-    pygame.init()
     win = pygame.display.set_mode((xWin, yWin))
     pygame.display.set_caption('MazeyMan 1.4.2')
     win.fill((70, 50, 30))

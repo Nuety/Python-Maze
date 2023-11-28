@@ -126,7 +126,7 @@ def solveMazelefthand(maze):
     right = directions[(rot+1)%4]
     complete = False
     path = []
-    health = 250000
+    health = 25000000
 
     while not complete:
         #continue running if front is not clear yet
