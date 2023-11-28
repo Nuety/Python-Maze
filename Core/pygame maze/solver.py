@@ -3,7 +3,8 @@ import generator
 import math 
 import random
 import time
-
+import pygame
+import sys
 
 #Breadth first search
 def solveMazebfs(maze, solvetimestep):
@@ -97,6 +98,9 @@ def solveMazebfs(maze, solvetimestep):
         rTemp = int((currCell.row + prevCell.row) / 2)
         cTemp = int((currCell.col + prevCell.col) / 2)
         time.sleep(solvetimestep)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: 
+                sys.exit(0)
 
         visualiser.draw(currCell.col, currCell.row, (0, 255, 0))
         visualiser.draw(cTemp, rTemp, (0, 255, 0))

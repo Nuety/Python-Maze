@@ -121,6 +121,11 @@ class Settings(Screen):
         self.solve_method_input = TextInput(text=self.main_menu.settings['method'])
         layout.add_widget(self.solve_method_input)
 
+        # Solution Speed
+        layout.add_widget(Label(text='Solution Speed (in ms, higher is slower(best choice is below 0.01))'))
+        self.solve_speed = TextInput(text=self.main_menu.settings['solutionspeed'])
+        layout.add_widget(self.solve_speed)
+
         save_button = Button(text='Save Settings', on_press=self.save_settings)
         back_button = Button(text='Back to Main Menu', on_press=self.go_to_main_menu)
         layout.add_widget(save_button)
@@ -136,7 +141,7 @@ class Settings(Screen):
         self.main_menu.settings['y_cells'] = self.y_cells_input.text
         self.main_menu.settings['generator_method'] = self.generator_method_input.text
         self.main_menu.settings['method'] = self.solve_method_input.text
-
+        self.main_menu.settings['solutionspeed'] = self.solve_speed.text
         # Update the start button text in the main menu
         self.main_menu.start_button.text = self.main_menu.get_start_button_text()
 
