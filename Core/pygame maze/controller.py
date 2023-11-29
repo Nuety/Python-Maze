@@ -61,7 +61,7 @@ class MainMenu(Screen):
             win_height = int(self.settings['window_size_y'])
 
             visual = visualiser.MazeVisualiser(win_width, win_height, x_cells, y_cells)
-            solve = solver.MazeSolver(visual, maze)
+            solve = solver.MazeSolver(visual, maze, x_cells, y_cells)
             
             visual.drawMaze(maze)
 

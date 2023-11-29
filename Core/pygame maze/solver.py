@@ -7,9 +7,25 @@ import pygame
 import sys
 
 class MazeSolver:
-    def __init__(self, vis, maz):
+    def __init__(self, vis, maz, colCells, rowCells):
         self.visual = vis
         self.maze = maz
+
+        self.mazeCellLenRow = colCells
+        self.mazeCellLenCol = rowCells
+
+        self.firstcellRow = random.randrange(1, (self.mazeCellLenRow * 2) + 1, 2)
+        self.firstcellCol = random.randrange(1, (self.mazeCellLenCol * 2) + 1, 2)
+        self.lastcellRow = random.randrange(1, (self.mazeCellLenRow * 2) + 1, 2)
+        self.lastcellCol = random.randrange(1, (self.mazeCellLenCol * 2) + 1, 2)
+
+        
+
+        # self.firstcellRow = 11
+        # self.firstcellCol = 11
+        # self.lastcellRow = 19
+        # self.lastcellCol = 11
+
 
 
     #Breadth first search
@@ -21,9 +37,18 @@ class MazeSolver:
         colorBias = 0
 
         #set first cell
-        activeCells.append(self.maze[1][1])
-        indexList.append([0, self.maze[1][1].id])
+        activeCells.append(self.maze[self.firstcellRow][self.firstcellCol])
+        #zero is for the first in the incrementer list
+        indexList.append([0, self.maze[self.firstcellRow][self.firstcellCol].id])
         
+        # activeCells.append(self.maze[1][1])
+        # indexList.append([0, self.maze[1][1].id])
+
+        #draw start blue
+        self.visual.draw(self.firstcellRow, self.firstcellCol, (0,0,255))
+
+        #draw end red
+        self.visual.draw(self.lastcellRow, self.lastcellCol, (255,0,0))
         
         complete = False 
         while len(activeCells) != 0 and not complete:
@@ -67,7 +92,7 @@ class MazeSolver:
                         self.visual.draw(cTemp, rTemp, (180 , 130 + abs(math.sin(colorBias) * 100) , 0))
                         
 
-                        if neighbor.row == len(self.maze) - 2 and neighbor.col == len(self.maze[0]) - 2:
+                        if neighbor.row == self.lastcellRow and neighbor.col == self.lastcellCol:
                             complete = True
                             neighborList.clear()
                             break
@@ -81,8 +106,8 @@ class MazeSolver:
         self.visual.drawMaze(self.maze)
 
 
-        currCell = self.maze[len(self.maze) - 2][len(self.maze[0]) - 2]
-        prevCell = self.maze[len(self.maze) - 2][len(self.maze[0]) - 2]
+        currCell = self.maze[self.lastcellRow][self.lastcellCol]
+        prevCell = self.maze[self.lastcellRow][self.lastcellCol]
 
         self.visual.draw(currCell.col, currCell.row, (0, 255, 0))
 
@@ -104,9 +129,6 @@ class MazeSolver:
             rTemp = int((currCell.row + prevCell.row) / 2)
             cTemp = int((currCell.col + prevCell.col) / 2)
             time.sleep(solvetimestep)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT: 
-                    sys.exit(0)
 
             self.visual.draw(currCell.col, currCell.row, (0, 255, 0))
             self.visual.draw(cTemp, rTemp, (0, 255, 0))
@@ -114,15 +136,27 @@ class MazeSolver:
 
 
             
-            if currCell.row == 1 and currCell.col == 1:
-                self.visual.draw(1, 1, (0, 255, 0))
+            # if currCell.row == self.firstcell and currCell.col == self.firstcellCol:
+            #     print(self.firstcellRow, self.firstcellCol)
+            #     #draw end red
+            #     self.visual.draw(self.firstcellRow, self.firstcellCol, (0,0,255))
+            #     self.visual.draw(self.lastcellRow, self.lastcellCol, (255,0,0))
+            #     # self.visual.draw(1, 1, (0, 255, 0))
+            #     break
+            print("curr row", currCell.row, "curr col", currCell.col, "firstcellY", self.firstcellCol, "firstcellx", self.firstcellRow)
+            if currCell.row == self.firstcellRow and currCell.col == self.firstcellCol:
+                #draw start blue
+                self.visual.draw(self.firstcellCol, self.firstcellRow, (0,0,255))
+
+                #draw end red
+                self.visual.draw(self.lastcellCol, self.lastcellRow, (255,0,0))
                 break
             prevCell = currCell
 
     #lefthand agent
     def solveMazelefthand(self):
         #draw agent
-        agent = self.maze[1][1]
+        agent = self.maze[self.firstcellRow][self.firstcellRow]
         self.visual.draw(agent.col, agent.row, (0,150,0))
 
 
@@ -182,7 +216,7 @@ class MazeSolver:
                 if health <= 0:
                     self.visual.draw(agent.col, agent.row, (255,0,0))
                     return
-            if agent.row == len(self.maze) - 2 and agent.col == len(self.maze[0]) - 2:
+            if agent.row == self.lastcellRow and agent.col == self.lastcellCol:
                 complete = True
                 break
 
@@ -211,8 +245,9 @@ class MazeSolver:
 
 
             
-            if currCell.row == len(self.maze) - 2 and currCell.col == len(self.maze[0]) - 2:
-                self.visual.draw(len(self.maze) - 2, len(self.maze[0]) - 2, (0, 255, 0))
+            if currCell.row == self.lastcellRow and currCell.col == self.lastcellCol:
+                print("dab")
+                self.visual.draw(self.lastcellRow, self.lastcellCol, (255, 0, 0))
                 break
             prevCell = currCell
 

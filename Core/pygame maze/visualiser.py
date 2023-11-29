@@ -62,6 +62,3 @@ class MazeVisualiser:
         self.win.blit(text, text_rect)
 
         pygame.display.flip()
-
-
-        
