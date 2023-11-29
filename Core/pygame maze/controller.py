@@ -59,26 +59,34 @@ class MainMenu(Screen):
 
             win_width = int(self.settings['window_size_x'])
             win_height = int(self.settings['window_size_y'])
-            visualiser.init(win_width, win_height, x_cells, y_cells)
-            visualiser.drawMaze(maze)
+
+            visual = visualiser.MazeVisualiser(win_width, win_height, x_cells, y_cells)
+            solve = solver.MazeSolver(visual, maze)
+            
+            visual.drawMaze(maze)
 
             # Switch to the MazeScreen for visualization
             maze_screen = MazeScreen(maze, name='maze_screen')
             self.manager.add_widget(maze_screen)
             self.manager.current = 'maze_screen'
 
+            visual.visMaze()
+
+
+        
             if self.settings['solve']:
                 method = self.settings['method']
                 if method == "bfs":
                     solutionspeed = float(self.settings['solutionspeed'])
-                    solver.solveMazebfs(maze, solutionspeed)
+                    solve.solveMazebfs(solutionspeed)
                 elif method == "lefthand":
-                    solver.solveMazelefthand(maze)
+                    solve.solveMazelefthand()
 
             # Add any additional logic you need after starting the maze
             #has while true so run last to keep still image of finished maze without crashing
             time.sleep(0.5)
-            visualiser.threadStop()
+            visual.threadStop()
+
 
     def go_to_settings(self, instance):
         self.manager.transition.direction = "left"
@@ -155,8 +163,8 @@ class Settings(Screen):
 class MazeApp(App):
     def build(self):
         settings = {
-            'window_size_x': '2560',
-            'window_size_y': '1440',
+            'window_size_x': '1280',
+            'window_size_y': '720',
             'x_cells': '100',
             'y_cells': '100',
             'generator_method': 'df',

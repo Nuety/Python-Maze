@@ -5,64 +5,63 @@ import math
 import threading
 import time
 
-def guiLoop(event):
-    # clock = pygame.time.Clock()
-    # while not event.is_set():
-    #     clock.tick(60)
-    #     threadUpdate()
-    t0 = time.time()
-    while not event.is_set():
-        dt = time.time()
-        if (dt - t0) % 0.1 < 0.1:
-            threadUpdate()
 
-def init(xWin, yWin, xCells, yCells):
-    global cellwidth
-    global cellheight
-    global win
-    global cell_Hor
-    global cell_Ver
-    cell_Hor = xCells
-    cell_Ver = yCells
+class MazeVisualiser:
+    def guiLoop(self):
+        clock = pygame.time.Clock()
+        while not self.tevent.is_set():
+            clock.tick(60)  # Adjust the frame rate as needed
+            self.threadUpdate()
 
-    cellwidth = xWin / ((cell_Hor * 2) + 1)
-    cellheight = yWin / ((cell_Ver * 2) + 1)
+    def __init__(self, xWin, yWin, xCells, yCells):
+        self.cell_Hor = xCells
+        self.cell_Ver = yCells
+        self.winSizeX = xWin
+        self.winSizeY = yWin
 
-    win = pygame.display.set_mode((xWin, yWin))
-    pygame.display.set_caption('MazeyMan 2.1')
-    win.fill((70, 50, 30))
+        self.cellwidth = xWin / ((self.cell_Hor * 2) + 1)
+        # yWin - 50 to account for back to manu button
+        self.cellheight = (yWin - 50) / ((self.cell_Ver * 2) + 1)
 
-    #deligate multithreading stuff
-    global tevent
-    tevent = threading.Event()
-    gui = threading.Thread(target=guiLoop, args=(tevent,))
-    gui.start()
+        pygame.font.init()
 
-def threadUpdate():
-    pygame.display.update()
-    for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit(0)
-            
+        self.win = pygame.display.set_mode((xWin, yWin))
+        pygame.display.set_caption('MazeyMan 2.1')
+        self.win.fill((70, 50, 30))
 
-def screenUpdate():
-    pygame.display.update()
+        #deligate multithreading stuff
+        self.tevent = threading.Event()
+        gui = threading.Thread(target=self.guiLoop, args=())
+        gui.start()
 
-#threadstop
-def threadStop():
-    tevent.set()
+    def threadUpdate(self):
+        pygame.display.update()
+        
 
-def drawMaze(maze):
-    for i in range(len(maze)):
-        for j in range(len(maze[0])):
-            if not maze[i][j].wall:
-                draw(j, i, (150, 102, 51))
+                
+    #threadstop
+    def threadStop(self):
+        self.tevent.set()
 
-def draw(x, y, color):
-    pygame.draw.rect(win, (color), pygame.Rect(x * cellwidth, y * cellheight, cellwidth + 1, cellheight + 1))
+    def drawMaze(self, maze):
+        for i in range(len(maze)):
+            for j in range(len(maze[0])):
+                if not maze[i][j].wall:
+                    self.draw(j, i, (150, 102, 51))
 
-def visMaze():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit(0)
+    def draw(self, x, y, color):
+        pygame.draw.rect(self.win, (color), pygame.Rect(x * self.cellwidth, y * self.cellheight, self.cellwidth + 1, self.cellheight + 1))
+
+    def visMaze(self):
+        # Draw a button
+        button_rect = pygame.Rect(0, self.winSizeY - 50, self.winSizeX, 50)  # - 50 to account for button size
+        pygame.draw.rect(self.win, (20, 20, 20), button_rect) 
+        font = pygame.font.Font(None, 36)
+        text = font.render("Back to Main Menu", True, (255, 255, 255))  # White text
+        text_rect = text.get_rect(center=button_rect.center)
+        self.win.blit(text, text_rect)
+
+        pygame.display.flip()
+
+
+        
