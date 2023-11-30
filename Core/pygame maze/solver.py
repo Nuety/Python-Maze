@@ -135,15 +135,6 @@ class MazeSolver:
 
 
 
-            
-            # if currCell.row == self.firstcell and currCell.col == self.firstcellCol:
-            #     print(self.firstcellRow, self.firstcellCol)
-            #     #draw end red
-            #     self.visual.draw(self.firstcellRow, self.firstcellCol, (0,0,255))
-            #     self.visual.draw(self.lastcellRow, self.lastcellCol, (255,0,0))
-            #     # self.visual.draw(1, 1, (0, 255, 0))
-            #     break
-            print("curr row", currCell.row, "curr col", currCell.col, "firstcellY", self.firstcellCol, "firstcellx", self.firstcellRow)
             if currCell.row == self.firstcellRow and currCell.col == self.firstcellCol:
                 #draw start blue
                 self.visual.draw(self.firstcellCol, self.firstcellRow, (0,0,255))
@@ -246,10 +237,65 @@ class MazeSolver:
 
             
             if currCell.row == self.lastcellRow and currCell.col == self.lastcellCol:
-                print("dab")
-                self.visual.draw(self.lastcellRow, self.lastcellCol, (255, 0, 0))
+                #draw start blue
+                self.visual.draw(self.firstcellCol, self.firstcellRow, (0,0,255))
+
+                #draw end red
+                self.visual.draw(self.lastcellCol, self.lastcellRow, (255,0,0))
                 break
             prevCell = currCell
 
+    #amogus
+    def solveFindAmogus(self):
+        upAmogi = []
+        leftAmogi = []
+        rightAmogi = []
+        downAmogi = []
+
+        for row in range(1, (self.mazeCellLenRow * 2) - 3, 2):
+            for col in range(1, (self.mazeCellLenCol * 2) - 1, 2):
+                upAmog = []
+                leftAmog = []
+                for aCol in range(col, col + 3):
+                    for aRow in range(row, row + 5):
+                        upAmog.append(self.maze[aRow][aCol])
+                        leftAmog.append(self.maze[aCol][aRow])
+                # print(upAmog[0].row, upAmog[0].col)
+                
+                upAmogi.append(upAmog)
+                leftAmogi.append(leftAmog)
+
+
+
+        for row in range(1, (self.mazeCellLenRow * 2) - 3, 2):
+            for col in range(1, (self.mazeCellLenCol * 2) - 1, 2):
+                downAmog = []
+                rightAmog = []
+                for aCol in range(col, col - 3, -1):
+                    for aRow in range(row, row - 5, -1):
+                        downAmog.append(self.maze[aCol][aRow])
+                        rightAmog.append(self.maze[aRow][aCol])
+                downAmogi.append(downAmog)
+                rightAmogi.append(rightAmog)
+
+        amogiList = [rightAmogi, downAmogi, leftAmogi, upAmogi]
+
+        for amogi in amogiList:
+            for amog in amogi:
+                skip = False
+                for cell in amog:
+                    if cell.visited:
+                        skip = True
+                if amog[5].wall or amog[7].wall or amog[3].wall or amog[13].wall or not amog[9].wall:
+                    skip = True
+                if amog[1].wall == amog[11].wall:
+                    skip = True
+
+                if not skip:
+                    for cell in amog:
+                        if not cell.wall:
+                            self.visual.draw(cell.col, cell.row, (255,0,0))
+                        cell.visited = True
+    
 
 

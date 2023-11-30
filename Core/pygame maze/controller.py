@@ -76,11 +76,15 @@ class MainMenu(Screen):
         
             if self.settings['solve']:
                 method = self.settings['method']
-                if method == "bfs":
-                    solutionspeed = float(self.settings['solutionspeed'])
-                    solve.solveMazebfs(solutionspeed)
-                elif method == "lefthand":
-                    solve.solveMazelefthand()
+                match method:
+                    case "bfs":
+                        solutionspeed = float(self.settings['solutionspeed'])
+                        solve.solveMazebfs(solutionspeed)
+                    case "lefthand":
+                        solve.solveMazelefthand()
+                    case "amogus":
+                        solve.solveFindAmogus()
+
 
             # Add any additional logic you need after starting the maze
             #has while true so run last to keep still image of finished maze without crashing
@@ -165,11 +169,11 @@ class MazeApp(App):
         settings = {
             'window_size_x': '1280',
             'window_size_y': '720',
-            'x_cells': '100',
-            'y_cells': '100',
-            'generator_method': 'df',
+            'x_cells': '50',
+            'y_cells': '50',
+            'generator_method': 'wfc',
             'solve': True,
-            'method': 'bfs',
+            'method': 'amogus',
             'solutionspeed': '0.00',
         }
         sm = ScreenManager()
