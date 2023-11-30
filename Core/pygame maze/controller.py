@@ -5,25 +5,12 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.dropdown import DropDown
 import visualiser
 import generator
 import solver
 import time
 import wfcgenerator
-
-class MazeScreen(Screen):
-    def __init__(self, maze, **kwargs):
-        super(MazeScreen, self).__init__(**kwargs)
-        self.maze = maze
-        layout = BoxLayout(orientation='vertical')
-        layout.add_widget(Label(text='Maze Visualization'))
-        # layout.add_widget(visualiser.get_canvas())  # Assuming get_canvas() returns the Kivy canvas
-        back_button = Button(text='Back to Main Menu', on_press=self.go_to_main_menu)
-        layout.add_widget(back_button)
-        self.add_widget(layout)
-
-    def go_to_main_menu(self, instance):
-        self.manager.current = 'main_menu'
 
 class MainMenu(Screen):
     def __init__(self, settings, **kwargs):
@@ -64,12 +51,6 @@ class MainMenu(Screen):
             solve = solver.MazeSolver(visual, maze, x_cells, y_cells)
             
             visual.drawMaze(maze)
-
-            # Switch to the MazeScreen for visualization
-            maze_screen = MazeScreen(maze, name='maze_screen')
-            self.manager.add_widget(maze_screen)
-            self.manager.current = 'maze_screen'
-
             visual.visMaze()
 
 
@@ -102,36 +83,85 @@ class Settings(Screen):
         self.main_menu = main_menu
         layout = BoxLayout(orientation='vertical')
         layout.add_widget(Label(text='Settings'))
+
+        resolutiondropdown = DropDown()
+        celldropdown = DropDown()
+        gendropdown = DropDown()
+        solvedropdown = DropDown()
+
+
+        resolutions = [('720p', 1280, 720),
+                        ('1080p', 1920, 1080),
+                        ('1440p', 2560, 1440)]
         
-        # Window Size X
-        layout.add_widget(Label(text='Window Width'))
-        self.window_size_input_x = TextInput(text=str(self.main_menu.settings['window_size_x']))
-        layout.add_widget(self.window_size_input_x)
+        generator_methods = [("df","df"), 
+                                ("wfc","wfc")]
 
-        # Window Size Y
-        layout.add_widget(Label(text='Window Height'))
-        self.window_size_input_y = TextInput(text=str(self.main_menu.settings['window_size_y']))
-        layout.add_widget(self.window_size_input_y)
+        solver_methods = [("bfs","bfs"), 
+                            ("lefthand","lefthand"), 
+                            ("amogus","amogus")]
+        
+        cellLimits = [('50', 50,50),
+                      ('100',100,100),
+                      ('200',200,200),
+                      ('300',300,300),
+                      ('500',500,500),
+                      ('1000',1000,1000),
+                      ('1500',1500,1500)]
+        
+        self.x_cells = 100
+        self.y_cells = 100
+        self.gen_method = "df"
+        self.solve_method = "bfs"
+        self.resW = 1280
+        self.resH = 720
 
-        # X Cells
-        layout.add_widget(Label(text='X Cells'))
-        self.x_cells_input = TextInput(text=str(self.main_menu.settings['x_cells']))
-        layout.add_widget(self.x_cells_input)
+        for option in resolutions:
+            btn = Button(text=option[0], size_hint_y=None, height=100)
+            btn.bind(on_release=lambda btn, opt=option: self.update_resolution(opt))
+            btn.bind(on_release=resolutiondropdown.dismiss)
+            resolutiondropdown.add_widget(btn)
 
-        # Y Cells
-        layout.add_widget(Label(text='Y Cells'))
-        self.y_cells_input = TextInput(text=str(self.main_menu.settings['y_cells']))
-        layout.add_widget(self.y_cells_input)
+        resButton = Button(text='Select Resolution', size_hint=(1, None))
+        resButton.bind(on_release=resolutiondropdown.open)
+        resolutiondropdown.bind(on_select=lambda instance, x: setattr(resButton, 'text', x))
 
-        # Generator Method
-        layout.add_widget(Label(text='Generator Method'))
-        self.generator_method_input = TextInput(text=self.main_menu.settings['generator_method'])
-        layout.add_widget(self.generator_method_input)
+        for option in generator_methods:
+            btn = Button(text=option[0], size_hint_y=None, height=100)
+            btn.bind(on_release=lambda btn, opt=option: self.update_gen_method(opt))
+            btn.bind(on_release=gendropdown.dismiss)
+            gendropdown.add_widget(btn)
 
-        # Solve Method
-        layout.add_widget(Label(text='Solve Method'))
-        self.solve_method_input = TextInput(text=self.main_menu.settings['method'])
-        layout.add_widget(self.solve_method_input)
+        genButton = Button(text='Select generator method', size_hint=(1,None))
+        genButton.bind(on_release=gendropdown.open)
+        gendropdown.bind(on_select=lambda instance, x: setattr(genButton, 'text', x))
+
+        for option in solver_methods:
+            btn = Button(text=option[0], size_hint_y=None, height=100)
+            btn.bind(on_release=lambda btn, opt=option: self.update_solve_method(opt))
+            btn.bind(on_release=solvedropdown.dismiss)
+            solvedropdown.add_widget(btn)
+
+        solveButton = Button(text='Select Solving method', size_hint=(1,None))
+        solveButton.bind(on_release=solvedropdown.open)
+        solvedropdown.bind(on_select=lambda instance, x: setattr(solveButton, 'text', x))
+
+        for option in cellLimits:
+            btn = Button(text=option[0], size_hint_y=None, height=100)
+            btn.bind(on_release=lambda btn, opt=option: self.update_cell_limits(opt))
+            btn.bind(on_release=celldropdown.dismiss)
+            celldropdown.add_widget(btn)
+
+        cellButton = Button(text='Select cells amount', size_hint=(1,None))
+        cellButton.bind(on_release=celldropdown.open)
+        celldropdown.bind(on_select=lambda instance, x: setattr(cellButton, 'text', x))
+
+
+        # Add widgets to the layout
+        layout.add_widget(resButton)
+        layout.add_widget(cellButton)
+        layout.add_widget(genButton)
+        layout.add_widget(solveButton)
 
         # Solution Speed
         layout.add_widget(Label(text='Solution Speed (in ms, higher is slower(best choice is below 0.01))'))
@@ -144,15 +174,28 @@ class Settings(Screen):
         layout.add_widget(back_button)
         self.add_widget(layout)
 
+    def update_resolution(self, option):
+        self.resW = option[1]
+        self.resH = option[2]
+
+    def update_gen_method(self, option):
+        self.gen_method = option[1]
+
+    def update_solve_method(self, option):
+        self.solve_method = option[1]
+
+    def update_cell_limits(self, option):
+        self.x_cells = option[0]
+        self.y_cells = option[1]
 
     def save_settings(self, instance):
         # Update the settings dictionary with the new values
-        self.main_menu.settings['window_size_x'] = self.window_size_input_x.text
-        self.main_menu.settings['window_size_y'] = self.window_size_input_y.text
-        self.main_menu.settings['x_cells'] = self.x_cells_input.text
-        self.main_menu.settings['y_cells'] = self.y_cells_input.text
-        self.main_menu.settings['generator_method'] = self.generator_method_input.text
-        self.main_menu.settings['method'] = self.solve_method_input.text
+        self.main_menu.settings['window_size_x'] = self.resW
+        self.main_menu.settings['window_size_y'] = self.resH
+        self.main_menu.settings['x_cells'] = self.x_cells
+        self.main_menu.settings['y_cells'] = self.y_cells
+        self.main_menu.settings['generator_method'] = self.gen_method
+        self.main_menu.settings['method'] = self.solve_method
         self.main_menu.settings['solutionspeed'] = self.solve_speed.text
         # Update the start button text in the main menu
         self.main_menu.start_button.text = self.main_menu.get_start_button_text()

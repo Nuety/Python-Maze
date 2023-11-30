@@ -54,6 +54,7 @@ class MazeVisualiser:
 
     def visMaze(self):
         # Draw a button
+        
         button_rect = pygame.Rect(0, self.winSizeY - 50, self.winSizeX, 50)  # - 50 to account for button size
         pygame.draw.rect(self.win, (20, 20, 20), button_rect) 
         font = pygame.font.Font(None, 36)

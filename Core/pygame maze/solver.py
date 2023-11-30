@@ -247,10 +247,7 @@ class MazeSolver:
 
     #amogus
     def solveFindAmogus(self):
-        upAmogi = []
-        leftAmogi = []
-        rightAmogi = []
-        downAmogi = []
+        Amogi = []
 
         for row in range(1, (self.mazeCellLenRow * 2) - 3, 2):
             for col in range(1, (self.mazeCellLenCol * 2) - 1, 2):
@@ -260,12 +257,9 @@ class MazeSolver:
                     for aRow in range(row, row + 5):
                         upAmog.append(self.maze[aRow][aCol])
                         leftAmog.append(self.maze[aCol][aRow])
-                # print(upAmog[0].row, upAmog[0].col)
                 
-                upAmogi.append(upAmog)
-                leftAmogi.append(leftAmog)
-
-
+                Amogi.append(upAmog)
+                Amogi.append(leftAmog)
 
         for row in range(1, (self.mazeCellLenRow * 2) - 3, 2):
             for col in range(1, (self.mazeCellLenCol * 2) - 1, 2):
@@ -275,27 +269,23 @@ class MazeSolver:
                     for aRow in range(row, row - 5, -1):
                         downAmog.append(self.maze[aCol][aRow])
                         rightAmog.append(self.maze[aRow][aCol])
-                downAmogi.append(downAmog)
-                rightAmogi.append(rightAmog)
+                Amogi.append(downAmog)
+                Amogi.append(rightAmog)
+        for amog in Amogi:
+            skip = False
+            for cell in amog:
+                if cell.visited:
+                    skip = True
+            if amog[5].wall or amog[7].wall or amog[3].wall or amog[13].wall or not amog[9].wall:
+                skip = True
+            if amog[1].wall == amog[11].wall:
+                skip = True
 
-        amogiList = [rightAmogi, downAmogi, leftAmogi, upAmogi]
-
-        for amogi in amogiList:
-            for amog in amogi:
-                skip = False
+            if not skip:
                 for cell in amog:
-                    if cell.visited:
-                        skip = True
-                if amog[5].wall or amog[7].wall or amog[3].wall or amog[13].wall or not amog[9].wall:
-                    skip = True
-                if amog[1].wall == amog[11].wall:
-                    skip = True
-
-                if not skip:
-                    for cell in amog:
-                        if not cell.wall:
-                            self.visual.draw(cell.col, cell.row, (255,0,0))
-                        cell.visited = True
+                    if not cell.wall:
+                        self.visual.draw(cell.col, cell.row, (255,0,0))
+                    cell.visited = True
     
 
 
