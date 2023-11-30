@@ -11,18 +11,22 @@ So far:
   Maze solver 
   - BFS
   - Really bad left hand on wall maze solver
+  - Among us finder
 
-TODO:
-  - possibly Better generator algorithms
   
 #Compiling and running
 
 path-to-repo\Core\pygame maze>python3 controller.py
 
 
+Updated to 2.4
+- Majer rework on settings tab, now dropdown boxes instead of textboxes
+
+Updated to 2.3
+- Among us solver implemented
 
 Updated to 2.1
-- Minor improvesments to Kivy implementation
+- Minor improvements to Kivy implementation
 
 Updated to 2.0
 - Added Kivy implementation to have main menu
