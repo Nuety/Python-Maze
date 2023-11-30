@@ -171,9 +171,9 @@ class MazeApp(App):
             'window_size_y': '720',
             'x_cells': '50',
             'y_cells': '50',
-            'generator_method': 'wfc',
+            'generator_method': 'df',
             'solve': True,
-            'method': 'amogus',
+            'method': 'bfs',
             'solutionspeed': '0.00',
         }
         sm = ScreenManager()
