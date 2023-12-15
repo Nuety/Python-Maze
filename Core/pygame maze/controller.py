@@ -37,24 +37,26 @@ class MainMenu(Screen):
         if self.settings_are_configured():
             x_cells = int(self.settings['x_cells'])
             y_cells = int(self.settings['y_cells'])
+            win_width = int(self.settings['window_size_x'])
+            win_height = int(self.settings['window_size_y'])
+            visual = visualiser.MazeVisualiser(win_width, win_height, x_cells, y_cells)
+
+            def draw_callback(cell):
+                visual.drawMazeAsync(cell)
 
             match self.settings['generator_method']:
                 case "df":
-                    maze = generator.newMaze(x_cells, y_cells)
+                    maze = generator.newMaze(x_cells, y_cells, callback=draw_callback)
                 case "wfc":
-                    maze = wfcgenerator.newMaze(x_cells, y_cells)
+                    maze = wfcgenerator.newMaze(x_cells, y_cells, callback=draw_callback)
 
-            win_width = int(self.settings['window_size_x'])
-            win_height = int(self.settings['window_size_y'])
-
-            visual = visualiser.MazeVisualiser(win_width, win_height, x_cells, y_cells)
             solve = solver.MazeSolver(visual, maze, x_cells, y_cells)
             
             visual.drawMaze(maze)
+            # time.sleep(0.5)
+
             visual.visMaze()
 
-
-        
             if self.settings['solve']:
                 method = self.settings['method']
                 match method:
@@ -66,12 +68,10 @@ class MainMenu(Screen):
                     case "amogus":
                         solve.solveFindAmogus()
 
-
             # Add any additional logic you need after starting the maze
             #has while true so run last to keep still image of finished maze without crashing
             time.sleep(0.5)
             visual.threadStop()
-
 
     def go_to_settings(self, instance):
         self.manager.transition.direction = "left"
@@ -88,7 +88,6 @@ class Settings(Screen):
         celldropdown = DropDown()
         gendropdown = DropDown()
         solvedropdown = DropDown()
-
 
         resolutions = [('720p', 1280, 720),
                         ('1080p', 1920, 1080),
@@ -156,7 +155,6 @@ class Settings(Screen):
         cellButton.bind(on_release=celldropdown.open)
         celldropdown.bind(on_select=lambda instance, x: setattr(cellButton, 'text', x))
 
-
         # Add widgets to the layout
         layout.add_widget(resButton)
         layout.add_widget(cellButton)
@@ -206,15 +204,14 @@ class Settings(Screen):
     def go_to_main_menu(self, instance):
         self.manager.transition.direction = "right"
         self.manager.current = 'main_menu'
-
 class MazeApp(App):
     def build(self):
         settings = {
             'window_size_x': '1280',
             'window_size_y': '720',
-            'x_cells': '50',
-            'y_cells': '50',
-            'generator_method': 'df',
+            'x_cells': '100',
+            'y_cells': '100',
+            'generator_method': 'wfc',
             'solve': True,
             'method': 'bfs',
             'solutionspeed': '0.00',

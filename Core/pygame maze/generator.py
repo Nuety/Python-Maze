@@ -1,5 +1,5 @@
 import random
-import functions
+import time
 class cell:
     def __init__(self, r, c, number):
         self.row = r
@@ -93,7 +93,7 @@ def getNeighbor(cell, maze):
     return cellList[rnd]
 
 #depth first generator
-def newMaze(width: int, height: int):
+def newMaze(width: int, height: int, callback=None):
     #random numbers
     random.seed()
     inc = 0
@@ -102,8 +102,8 @@ def newMaze(width: int, height: int):
     cellStack = []
 
     #init array
-    rows = int((width * 2) + 1)
-    cols = int((height * 2) + 1)
+    rows = int((height * 2) + 1)
+    cols = int((width * 2) + 1)
     mazeArr = [[cell for i in range(rows)] for j in range(cols)]
 
     #init maze cells
@@ -133,7 +133,12 @@ def newMaze(width: int, height: int):
 
             cellStack.append(neighbor)
             currCell = neighbor
-            
+
+            if callback:
+                callback(neighbor)
+                callback_wall = cell(rTemp,cTemp, -1)
+                callback(callback_wall)
+
         else:
             #return random cell from the neighborlist
             rnd = random.randint(0, 100)

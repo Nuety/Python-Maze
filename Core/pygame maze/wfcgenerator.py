@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import time
 
 class ecell:
     def __init__(self, r, c, up, right, down, left, ent, toent):
@@ -27,6 +28,15 @@ class displaycell:
     #debug i think
     def info(self):
         return (self.row, self.col, self.wall)
+
+def callHelp(row, col, e):
+    if e:
+        newcelldisplayrows = int((row * 2) + 1)
+        newcelldisplaycols = int((col * 2) + 1)
+        newcell = displaycell(newcelldisplayrows, newcelldisplaycols, -1)
+    else:
+        newcell = displaycell(row, col, -1)
+    return newcell
 
 #setup entropy and directions
 def setup(maze, cols, rows):
@@ -161,7 +171,6 @@ def findRotation(cell):
     #rotation of cell
     cellRot = cell.dir
 
-
     #rotation of block
     match cell.entropy:
         case 0:
@@ -200,7 +209,7 @@ def findRotation(cell):
         if count == 4:
             return tileRot
 
-def newMaze(width: int, height: int):
+def newMaze(width: int, height: int, callback = None):
     #random numbers
     random.seed()
 
@@ -216,17 +225,15 @@ def newMaze(width: int, height: int):
             mazeArr[i][j] = displaycell(i,j, inc)
             inc += 1
 
-
     cellArr = [[ecell for i in range(width)] for j in range(height)]
 
     setup(cellArr, height, width)
 
     rnd1 = random.randint(0, height)
-    rnd2 = random.randint(0, height)
+    rnd2 = random.randint(0, width)
 
     cellStack = [cellArr[rnd1][rnd2]]
     
-
     #main loop
     while len(cellStack) > 0:
         currCell = cellStack.pop()
@@ -238,7 +245,6 @@ def newMaze(width: int, height: int):
         currCell.collapsed = True
 
         rotation = findRotation(currCell)
-
         #find which corridors to close off
         #array to know which neighbors to close from
         closeArr = np.subtract(currCell.dir, rotation)
@@ -249,6 +255,9 @@ def newMaze(width: int, height: int):
         #close walls from neighbors
         r = currCell.row - 1
         c = currCell.col - 1
+
+        if callback:
+            callback(callHelp(currCell.row,currCell.col, True))
         #up
         if closeArr[0] == 1 and cellArr[r-1][c].dir[2] != 0:
             cellArr[r-1][c].dir[2] = cellArr[r-1][c].dir[2] - 1
@@ -265,6 +274,16 @@ def newMaze(width: int, height: int):
         if closeArr[3] == 1 and cellArr[r][c-1].dir[1] != 0 :
             cellArr[r][c-1].dir[1] = cellArr[r][c-1].dir[1] - 1
             refreshEntropy(cellArr[r][c-1])
+
+        # Callback rendering
+        if currCell.dir[0] == 1:
+            callback(callHelp(int((2 * currCell.row)), int((2 * currCell.col) + 1), False))
+        if currCell.dir[1] == 1:
+            callback(callHelp(int((2 * currCell.row) + 1), int((2 * currCell.col) + 2), False))
+        if currCell.dir[2] == 1:
+            callback(callHelp(int((2 * currCell.row) + 2), int((2 * currCell.col) + 1), False))
+        if currCell.dir[3] == 1:
+            callback(callHelp(int((2 * currCell.row) + 1), int((2 * currCell.col)), False))
         
         neighbors = locateNeighbor(cellArr, currCell)
         if neighbors == []:
@@ -277,7 +296,7 @@ def newMaze(width: int, height: int):
                     else:
                         neighbor.isFound = True
                         cellStack.append(neighbor)
-
+        
     for row in cellArr:
         for cell in row:
             #remove wall of self
@@ -285,11 +304,14 @@ def newMaze(width: int, height: int):
             #remove wall of passage
             if cell.dir[0] == 1:
                 mazeArr[int((2 * cell.row))][int((2 * cell.col) + 1)].wall = False
+                # callback(callHelp(int((2 * cell.row)), int((2 * cell.col) + 1), False))
             if cell.dir[1] == 1:
                 mazeArr[int((2 * cell.row) + 1)][int((2 * cell.col) + 2)].wall = False
+                # callback(callHelp(int((2 * cell.row) + 1), int((2 * cell.col) + 2), False))
             if cell.dir[2] == 1:
                 mazeArr[int((2 * cell.row) + 2)][int((2 * cell.col) + 1)].wall = False
+                # callback(callHelp(int((2 * cell.row) + 2), int((2 * cell.col) + 1), False))
             if cell.dir[3] == 1:
                 mazeArr[int((2 * cell.row) + 1)][int((2 * cell.col))].wall = False
-
+                # callback(callHelp(int((2 * cell.row) + 1), int((2 * cell.col)), False))
     return mazeArr

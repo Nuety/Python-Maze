@@ -19,15 +19,6 @@ class MazeSolver:
         self.lastcellRow = random.randrange(1, (self.mazeCellLenRow * 2) + 1, 2)
         self.lastcellCol = random.randrange(1, (self.mazeCellLenCol * 2) + 1, 2)
 
-        
-
-        # self.firstcellRow = 11
-        # self.firstcellCol = 11
-        # self.lastcellRow = 19
-        # self.lastcellCol = 11
-
-
-
     #Breadth first search
     def solveMazebfs(self, solvetimestep):
         activeCells = []
@@ -101,10 +92,9 @@ class MazeSolver:
                             neighbor.isFound = True
             indexAcc += 1
 
-            
         #when exit located
         self.visual.drawMaze(self.maze)
-
+        time.sleep(0.5)
 
         currCell = self.maze[self.lastcellRow][self.lastcellCol]
         prevCell = self.maze[self.lastcellRow][self.lastcellCol]
@@ -132,8 +122,6 @@ class MazeSolver:
 
             self.visual.draw(currCell.col, currCell.row, (0, 255, 0))
             self.visual.draw(cTemp, rTemp, (0, 255, 0))
-
-
 
             if currCell.row == self.firstcellRow and currCell.col == self.firstcellCol:
                 #draw start blue
@@ -232,9 +220,6 @@ class MazeSolver:
             c2 += 1
             currCell = path[c1]
             prevCell = path[c2]
-
-
-
             
             if currCell.row == self.lastcellRow and currCell.col == self.lastcellCol:
                 #draw start blue
@@ -286,6 +271,3 @@ class MazeSolver:
                     if not cell.wall:
                         self.visual.draw(cell.col, cell.row, (255,0,0))
                     cell.visited = True
-    
-
-
