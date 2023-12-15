@@ -21,7 +21,7 @@ class MazeVisualiser:
         pygame.font.init()
 
         self.win = pygame.display.set_mode((xWin, yWin))
-        pygame.display.set_caption('MazeyMan 2.4')
+        pygame.display.set_caption('MazeyMan 2.5')
         self.win.fill((70, 50, 30))
         self.back_buffer = pygame.Surface((xWin, yWin))
         self.back_buffer.fill((70, 50, 30))

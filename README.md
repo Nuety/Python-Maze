@@ -18,9 +18,11 @@ So far:
 
 path-to-repo\Core\pygame maze>python3 controller.py
 
+Updated to 2.5
+- Added callback function to view generation during generation
 
 Updated to 2.4
-- Majer rework on settings tab, now dropdown boxes instead of textboxes
+- Major rework on settings tab, now dropdown boxes instead of textboxes
 
 Updated to 2.3
 - Among us solver implemented
